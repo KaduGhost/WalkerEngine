@@ -12,7 +12,7 @@ public class Config extends Configuration {
 		super("config", plugin);
 		checkEstrutura();
 	}
-
+	
 	public void checkEstrutura() {
 		if (!get().contains("Conexao.MySQL")) {
 			get().set("Conexao.MySQL.ativar", false);
@@ -22,6 +22,7 @@ public class Config extends Configuration {
 			get().set("Conexao.senha", "kaduzin");
 			get().set("Conexao.banco", "hpteste");
 		}
+		if (!get().contains("Permissoes.load-default-permissions")) get().set("Permissoes.load-default-permissions", true);
 		if (!get().contains("Mensagens.erro")) get().set("Mensagens.erro", "&c");
 		if (!get().contains("Mensagens.sucesso")) get().set("Mensagens.sucesso", "&a");
 		if (!get().contains("Warp.principal")) get().set("Warp.principal", "nenhuma");
@@ -51,6 +52,15 @@ public class Config extends Configuration {
 		if (!get().contains("Expulsar-sem-vip")) get().set("Expulsar-sem-vip", true);
 		if (!get().contains("Tempo-para-expulsar")) get().set("Tempo-para-expulsar", 60);
 		save();
+	}
+	
+	public void setLoadDefaultPermissions(boolean b) {
+		get().set("Permissoes.load-default-permissions", b);
+		save();
+	}
+	
+	public boolean getLoadDefaultPermissions() {
+		return get().getBoolean("Permissoes.load-default-permissions");
 	}
 	
 	public int getTempoKickNaoVip() {
@@ -120,7 +130,7 @@ public class Config extends Configuration {
 	}
 	
 	public boolean getConexaoMySQL() {
-		return get().getBoolean("Conexao.MySQL");
+		return get().getBoolean("Conexao.MySQL.ativar");
 	}
 
 	public String getConexaoHost() {

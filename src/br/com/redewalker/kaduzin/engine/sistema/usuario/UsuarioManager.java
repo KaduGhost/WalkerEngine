@@ -39,10 +39,10 @@ public class UsuarioManager {
 		return WalkerEngine.get().getConexaoManager().getUsuarioConnection().getUsuario(nick);
 	}
 	
-	public Usuario createUsuario(Player p) {
-		if (exists(p.getName())) return null;
-		WalkerEngine.get().getConexaoManager().getUsuarioConnection().createUsuario(p.getName(), p.getUniqueId().toString());
-		return getUsuario(p.getName());
+	public Usuario createUsuario(String p) {
+		if (exists(p)) return null;
+		WalkerEngine.get().getConexaoManager().getUsuarioConnection().createUsuario(p);
+		return getUsuario(p);
 	}
 	
 	public boolean exists(String nick) {

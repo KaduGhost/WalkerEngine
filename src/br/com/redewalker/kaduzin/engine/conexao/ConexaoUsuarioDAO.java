@@ -52,8 +52,8 @@ public class ConexaoUsuarioDAO extends Conexao {
 		return 0;
 	}
 	
-	public boolean createUsuario(String nick, String uuid) {
-		String sql = "insert into "+getNome()+"(nick,grupo,grupoout,cash,logado,vanish) values(?,?,?,?,?,?)";
+	public boolean createUsuario(String nick) {
+		String sql = "insert into "+getNome()+"(nick,grupo,grupoout,cash,logado,vanish,online) values(?,?,?,?,?,?,?)";
 		try {
 			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
 			st.setString(1, nick);
@@ -62,6 +62,7 @@ public class ConexaoUsuarioDAO extends Conexao {
 			st.setDouble(4, 0);
 			st.setBoolean(5, false);
 			st.setBoolean(6, false);
+			st.setBoolean(7, false);
 			st.executeUpdate();
 			return true;
 		} catch (SQLException e) {
@@ -90,6 +91,7 @@ public class ConexaoUsuarioDAO extends Conexao {
 		String sql = "select * from "+getNome()+" where nick = ?";
 		try {
 			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
+			st.setString(1, nick);
 			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
 				return new Usuario(rs.getString("nick"));

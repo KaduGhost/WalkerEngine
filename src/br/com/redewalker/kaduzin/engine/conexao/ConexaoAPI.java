@@ -27,6 +27,7 @@ public class ConexaoAPI {
 			this.usuario = config.getConexaoUsuario();
 			this.senha = config.getConexaoSenha();
 			this.porta = config.getConexaoPort();
+			this.host = config.getConexaoHost();
 		}
 		else {
 			file = new File(WalkerEngine.get().getDataFolder()+File.separator+banco+".db");
@@ -43,7 +44,7 @@ public class ConexaoAPI {
 			if ((con != null) && (!con.isClosed())) return con;
 			switch (tipo) {
 			case MYSQL:
-				this.con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + porta + "/" + banco, usuario, senha);
+				this.con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + porta + "/" + banco + "?autoReconnect=true", usuario, senha);
 				Bukkit.getConsoleSender().sendMessage("§a"+WalkerEngine.get().getTag()+" Conexão com MySQL concluida com sucesso!");
 				return con;
 			default:
@@ -63,6 +64,7 @@ public class ConexaoAPI {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 			Bukkit.getConsoleSender().sendMessage("§c"+WalkerEngine.get().getTag()+" Erro ao tentar fazer conexão com o banco de dados");
+			Bukkit.shutdown();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			Bukkit.getConsoleSender().sendMessage("§c"+WalkerEngine.get().getTag()+" Erro ao tentar fazer conexão com o banco de dados");

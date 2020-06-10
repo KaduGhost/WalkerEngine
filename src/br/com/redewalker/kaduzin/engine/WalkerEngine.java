@@ -7,6 +7,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import br.com.redewalker.kaduzin.engine.conexao.ConexaoManager;
 import br.com.redewalker.kaduzin.engine.configuracao.ConfigManager;
 import br.com.redewalker.kaduzin.engine.listeners.UsuarioListeners;
+import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoManager;
+import br.com.redewalker.kaduzin.engine.sistema.server.ServerType;
+import br.com.redewalker.kaduzin.engine.sistema.staff.StaffManager;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.UsuarioManager;
 
 public class WalkerEngine extends JavaPlugin {
@@ -15,7 +18,10 @@ public class WalkerEngine extends JavaPlugin {
 	private UsuarioManager usuarioManager;
 	private ConexaoManager conexaoAPI;
 	private ConfigManager config;
+	private GrupoManager grupoManager;
+	private StaffManager staffManager;
 	private String tag;
+	private ServerType server = ServerType.Lobby;
 	
 	public static WalkerEngine get() {
 		return instance;
@@ -28,6 +34,8 @@ public class WalkerEngine extends JavaPlugin {
 		config = new ConfigManager(this);
 		conexaoAPI = new ConexaoManager(getConfigManager().getConfigPrincipal());
 		usuarioManager = new UsuarioManager();
+		grupoManager = new GrupoManager(config.getConfigPrincipal());
+		staffManager = new StaffManager();
 		registrarEventos();
 	}
 	
@@ -36,8 +44,20 @@ public class WalkerEngine extends JavaPlugin {
 		
 	}
 	
+	public ServerType getServerType() {
+		return server;
+	}
+	
 	public FileConfiguration getConfig() {
 		return config.getConfigPrincipal().get();
+	}
+	
+	public StaffManager getStaffManager() {
+		return staffManager;
+	}
+	
+	public GrupoManager getGruposManager() {
+		return grupoManager;
 	}
 	
 	public ConfigManager getConfigManager() {
