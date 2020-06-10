@@ -98,11 +98,15 @@ public class GrupoManager {
 			switch (gp) {
 			case Membro:
 				grupos.get(gp).setTag(new Tag("", "§7"));
+				grupos.get(gp).addPermission("walker.chat.chatglobal");
+				grupos.get(gp).addPermission("walker.chat.chatlocal");
 				break;
 			case VIPLobby:
 				grupos.get(gp).setNome("VIP");
 				grupos.get(gp).setTag(new Tag("[VIP]", "§e"));
 				grupos.get(gp).addHeranca(GrupoType.Membro);
+				grupos.get(gp).addPermission("walker.chat.cor");
+				grupos.get(gp).addPermission("walker.chat.formato");
 				break;
 			case VIP1:
 				grupos.get(gp).setNome("VIP");
@@ -143,6 +147,7 @@ public class GrupoManager {
 				grupos.get(gp).setNome("Staff");
 				grupos.get(gp).setTag(new Tag("[Staff]", "§e"));
 				grupos.get(gp).addHeranca(GrupoType.VIP3);
+				grupos.get(gp).addPermission("walker.chat.nodelay");
 				break;
 			case Ajudante:
 				grupos.get(gp).setNome("Ajudante");
@@ -164,6 +169,7 @@ public class GrupoManager {
 				grupos.get(gp).setNome("Gerente");
 				grupos.get(gp).setTag(new Tag("[Gerente]", "§4"));
 				grupos.get(gp).addHeranca(GrupoType.Administrador);
+				grupos.get(gp).addPermission("walker.staff.setar");
 				break;
 			case Master:
 				grupos.get(gp).setNome("Master");

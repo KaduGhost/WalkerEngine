@@ -15,6 +15,14 @@ public class Usuario {
 		this.nickOriginal = nick;
 	}
 	
+	public String getChatFocus() {
+		return WalkerEngine.get().getConexaoManager().getUsuarioConnection().getString(nickOriginal, "chatfocus");
+	}
+
+	public void setChatFocus(String chatFocus) {
+		WalkerEngine.get().getConexaoManager().getUsuarioConnection().setString(nickOriginal, "chatfocus", chatFocus);
+	}
+	
 	public boolean hasPermission(String permission) {
 		return /*permissions.contains(permission.toLowerCase()) || */hasPermissionOP() || WalkerEngine.get().getGruposManager().hasPermission(getGrupoIn(), permission) || WalkerEngine.get().getGruposManager().hasPermission(getGrupoOut(), permission) || (getPlayer() instanceof Player && (getPlayer().hasPermission(permission)));
 	}

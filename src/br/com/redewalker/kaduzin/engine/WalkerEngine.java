@@ -7,7 +7,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import br.com.redewalker.kaduzin.engine.conexao.ConexaoManager;
 import br.com.redewalker.kaduzin.engine.configuracao.ConfigManager;
 import br.com.redewalker.kaduzin.engine.listeners.UsuarioListeners;
+import br.com.redewalker.kaduzin.engine.sistema.chat.ChatManager;
 import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoManager;
+import br.com.redewalker.kaduzin.engine.sistema.placeholder.PlaceHookWalkers;
+import br.com.redewalker.kaduzin.engine.sistema.placeholder.PlaceholderAPI;
 import br.com.redewalker.kaduzin.engine.sistema.server.ServerType;
 import br.com.redewalker.kaduzin.engine.sistema.staff.StaffManager;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.UsuarioManager;
@@ -20,6 +23,8 @@ public class WalkerEngine extends JavaPlugin {
 	private ConfigManager config;
 	private GrupoManager grupoManager;
 	private StaffManager staffManager;
+	private ChatManager chatManager;
+	private PlaceholderAPI placeholder;
 	private String tag;
 	private ServerType server = ServerType.Lobby;
 	
@@ -36,6 +41,13 @@ public class WalkerEngine extends JavaPlugin {
 		usuarioManager = new UsuarioManager();
 		grupoManager = new GrupoManager(config.getConfigPrincipal());
 		staffManager = new StaffManager();
+		chatManager = new ChatManager(getConfigManager().getConfigChat());
+		placeholder = new PlaceholderAPI();
+		try {
+			placeholder.registerPlaceHolder(new PlaceHookWalkers("walkers"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		registrarEventos();
 	}
 	
@@ -50,6 +62,14 @@ public class WalkerEngine extends JavaPlugin {
 	
 	public FileConfiguration getConfig() {
 		return config.getConfigPrincipal().get();
+	}
+	
+	public PlaceholderAPI getPlaceholderAPI() {
+		return placeholder;
+	}
+	
+	public ChatManager getChatManager() {
+		return chatManager;
 	}
 	
 	public StaffManager getStaffManager() {
