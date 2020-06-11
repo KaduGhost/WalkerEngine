@@ -19,12 +19,12 @@ public class ChatPermanente implements Canal {
 	private boolean ativo;
 	private Tag tag;
 	private int custo, delay, distancia;
-	private boolean focus, entreMundos, mostrarMsgCusto;
+	private boolean focus, entreMundos, mostrarMsgCusto, bungee;
 	private ArrayList<String> mundos;
 	private ArrayList<String> ignorando;
 	private HashMap<String, Long> delayList;
 	
-	public ChatPermanente(String nome, String nick, String formato, boolean ativo, boolean focus, boolean entreMundos, boolean mostrarMsgCusto, Tag tag, int custo, int delay, int distancia, ArrayList<String> mundos) {
+	public ChatPermanente(String nome, String nick, String formato, boolean ativo, boolean focus, boolean entreMundos, boolean mostrarMsgCusto, Tag tag, int custo, int delay, int distancia, ArrayList<String> mundos, boolean bungee) {
 		this.nome = nome;
 		this.nick = nick;
 		this.formato = formato;
@@ -37,6 +37,7 @@ public class ChatPermanente implements Canal {
 		this.entreMundos = entreMundos;
 		this.mostrarMsgCusto = mostrarMsgCusto;
 		this.mundos = mundos;
+		this.bungee = bungee;
 		this.ignorando = new ArrayList<String>();
 		this.delayList = new HashMap<String, Long>();
 	}
@@ -216,6 +217,16 @@ public class ChatPermanente implements Canal {
 			else return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean isBungee() {
+		return bungee;
+	}
+
+	@Override
+	public void setBungee(boolean set) {
+		this.bungee = set;
 	}
 	
 }

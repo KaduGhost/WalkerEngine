@@ -7,6 +7,10 @@ import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
 
 public interface Canal {
 	
+	public boolean isBungee();
+	
+	public void setBungee(boolean set);
+	
 	public long getDelayRestante(Usuario nick);
 	
 	public void addNoDelay(Usuario nick);

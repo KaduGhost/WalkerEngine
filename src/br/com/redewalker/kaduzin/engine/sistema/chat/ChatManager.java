@@ -127,9 +127,10 @@ public class ChatManager implements Listener {
 	public void loadCanais() {
 		canais.clear();
 		if (config.isLoadDefaultCanais()) {
-			criarCanalPermanente(new ChatPermanente("local", "l", "{chat} {grupo} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(L)", "§e"), 0, 5, 20, new ArrayList<String>()));
-			criarCanalPermanente(new ChatPermanente("global", "g", "{chat} {grupo} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(G)", "§7"), 0, 5, 0, new ArrayList<String>()));
-			criarCanalPermanente(new ChatPermanente("staff", "s", "{chat} {grupo} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(S)", "§d"), 0, 0, 0, new ArrayList<String>()));
+			criarCanalPermanente(new ChatPermanente("local", "l", "{chat} {grupo} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(L)", "§e"), 0, 5, 20, new ArrayList<String>(),false));
+			criarCanalPermanente(new ChatPermanente("global", "g", "{chat} {grupo} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(G)", "§7"), 0, 5, 0, new ArrayList<String>(),false));
+			criarCanalPermanente(new ChatPermanente("staff", "s", "{chat} {grupo} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(S)", "§d"), 0, 0, 0, new ArrayList<String>(),false));
+			criarCanalPermanente(new ChatPermanente("staffbungee", "sb", "{chat} {server}{grupo} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(S)", "§d"), 0, 0, 0, new ArrayList<String>(),false));
 			config.setLoadDefaultCanais(false);
 		}
 		if (file.exists()) {
@@ -144,7 +145,7 @@ public class ChatManager implements Listener {
 	
 	public void loadCanal(File channel) {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(channel);
-		criarCanalPermanente(new ChatPermanente(config.getString("nome"), config.getString("nick"), config.getString("formato"), config.getBoolean("ativo"), config.getBoolean("focus"), config.getBoolean("entreMundos"), config.getBoolean("mostrarMsgCusto"), new Tag(config.getString("tag"), config.getString("cor").replace("&", "§")), config.getInt("custo"), config.getInt("delay"), config.getInt("distancia"), (ArrayList<String>) config.getStringList("mundos")));
+		criarCanalPermanente(new ChatPermanente(config.getString("nome"), config.getString("nick"), config.getString("formato"), config.getBoolean("ativo"), config.getBoolean("focus"), config.getBoolean("entreMundos"), config.getBoolean("mostrarMsgCusto"), new Tag(config.getString("tag"), config.getString("cor").replace("&", "§")), config.getInt("custo"), config.getInt("delay"), config.getInt("distancia"), (ArrayList<String>) config.getStringList("mundos"), config.getBoolean("entreMundos")));
 	}
 	
 	public void loadChatTags() {
@@ -155,6 +156,7 @@ public class ChatManager implements Listener {
 			jogador.setHoverRecebedor("walker.chattag.cash", new ArrayList<String>(Arrays.asList("§eCash: §f%jogador_cash%")));
 			criarChatTag(jogador);
 			criarChatTag(new ChatTag("%grupo_tag%", "%grupo_cor%", "grupo"));
+			criarChatTag(new ChatTag("[%server_nome%] ", "§5", "server"));
 			criarChatTag(new ChatTag("%grupoin_tag%", "%grupoout_cor%", "grupoin"));
 			criarChatTag(new ChatTag("%grupoout_tag%", "%grupoout_cor%", "grupoout"));
 			criarChatTag(new ChatTag("%chat_tag%", "%chat_tag_cor%", "chat"));
