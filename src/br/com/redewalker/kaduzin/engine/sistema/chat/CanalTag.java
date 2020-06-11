@@ -9,6 +9,12 @@ public interface CanalTag {
 	
 	public boolean isPlayerCanUse(String jogador);
 	
+	public void setNome(String nome);
+	
+	public void setTag(String tag);
+	
+	public void setCor(String cor);
+	
 	public String getUrl();
 	
 	public String getSuggest();
@@ -62,10 +68,6 @@ public interface CanalTag {
 	public void removeHoverRecebedor(String permission);
 	
 	public void removeAllHovers();
-	
-	public void removeHovers();
-	
-	public void removeHoverRecebedor();
 	
 	public void setItem(ItemStack item);
 

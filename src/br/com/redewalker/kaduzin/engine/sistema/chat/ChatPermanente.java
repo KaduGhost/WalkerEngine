@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.apis.MensagensAPI;
+import br.com.redewalker.kaduzin.engine.apis.VanishAPI;
 import br.com.redewalker.kaduzin.engine.sistema.tag.Tag;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
 
@@ -154,7 +155,7 @@ public class ChatPermanente implements Canal {
 			}
 			if (getDistancia() > 0) {
 				if (sender.getLocation().distance(p.getLocation()) <= getDistancia()) {
-					if (j2.hasPermission("walker.chat.chat"+nome) && (!j2.isVanish() /*|| VanishAPI.jogadorCanSeeVanish(j)*/)) prox = true;
+					if (j2.hasPermission("walker.chat.chat"+nome) && (!j2.isVanish() || VanishAPI.usuarioCanSeeVanish(j))) prox = true;
 					if (j2.hasPermission("walker.chat.chat"+nome)) prox1 =true;
 				}
 				if (!isEntreMundos()) {

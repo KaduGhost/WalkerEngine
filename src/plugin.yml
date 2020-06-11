@@ -2,4 +2,5 @@ name: WalkerEngine
 version: 1.0.0
 main: br.com.redewalker.kaduzin.engine.WalkerEngine
 authors: [KaduzinGhost_]
+softdepend: [ProtocolLib]
 load: STARTUP

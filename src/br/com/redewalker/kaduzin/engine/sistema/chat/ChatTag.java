@@ -137,6 +137,7 @@ public class ChatTag implements CanalTag {
 		if (hovers != null) {
 			hovers.remove(permission);
 			if (hovers.size() == 0) hovers = null;
+			ordemHovers.remove(permission);
 		}
 	}
 	
@@ -144,25 +145,31 @@ public class ChatTag implements CanalTag {
 		if (hoverRecebedor != null) {
 			hoverRecebedor.remove(permission);
 			if (hoverRecebedor.size() == 0) hoverRecebedor = null;
+			ordemHovers.remove(permission);
 		}
 	}
 	
 	public void removeAllHovers() {
 		hovers = null;
 		hoverRecebedor = null;
-	}
-	
-	public void removeHovers() {
-		hovers = null;
-	}
-	
-	public void removeHoverRecebedor() {
-		hoverRecebedor = null;
+		ordemHovers = new ArrayList<String>();
 	}
 	
 	public void setItem(ItemStack item) {
 		this.showItem = item;
 		this.hovers = null;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public void setTag(String nome) {
+		this.tag = nome.replace("&", "§");
+	}
+
+	public void setCor(String nome) {
+		this.cor = nome.replace("&", "§");
 	}
 	
 }

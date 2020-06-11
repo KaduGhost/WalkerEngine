@@ -115,7 +115,7 @@ public class ChatManager implements Listener {
 	}
 	
 	public boolean existsTag(String nome) {
-		return tags.containsKey(nome.toLowerCase());
+		return tags.containsKey("{"+(nome.toLowerCase().replace("{", "").replace("}", ""))+"}");
 	}
 	
 	public Canal getChatDefault() {
@@ -127,9 +127,9 @@ public class ChatManager implements Listener {
 	public void loadCanais() {
 		canais.clear();
 		if (config.isLoadDefaultCanais()) {
-			criarCanal(new ChatPermanente("local", "l", "{chat} {grupo} {magnata} {faccao} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(L)", "§e"), 0, 5, 20, new ArrayList<String>()));
-			criarCanal(new ChatPermanente("global", "g", "{chat} {grupo} {magnata} {faccao} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(G)", "§7"), 0, 5, 0, new ArrayList<String>()));
-			criarCanal(new ChatPermanente("staff", "s", "{chat} {grupo} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(S)", "§d"), 0, 0, 0, new ArrayList<String>()));
+			criarCanalPermanente(new ChatPermanente("local", "l", "{chat} {grupo} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(L)", "§e"), 0, 5, 20, new ArrayList<String>()));
+			criarCanalPermanente(new ChatPermanente("global", "g", "{chat} {grupo} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(G)", "§7"), 0, 5, 0, new ArrayList<String>()));
+			criarCanalPermanente(new ChatPermanente("staff", "s", "{chat} {grupo} {jogador}{chat_cor}: {msg}", true, true, true, false, new Tag("(S)", "§d"), 0, 0, 0, new ArrayList<String>()));
 			config.setLoadDefaultCanais(false);
 		}
 		if (file.exists()) {
@@ -151,8 +151,8 @@ public class ChatManager implements Listener {
 		tags.clear();
 		if (config.isLoadDefaultChatTags()) {
 			CanalTag jogador = new ChatTag("%jogador_nick%", "%grupo_cor%", "jogador");
-			jogador.setHover("walkers.membro", new ArrayList<String>(Arrays.asList("§eFacção: §fem breve", "§ePoder: §fem breve", "§eGrupo: §f%grupo_tag%", "§eCoins: §f%jogador_coins%")));
-			jogador.setHoverRecebedor("walkers.chattag.cash", new ArrayList<String>(Arrays.asList("§eCash: §f%jogador_cash%")));
+			jogador.setHover("walker.membro", new ArrayList<String>(Arrays.asList("§eGrupo: §f%grupo_tag%")));
+			jogador.setHoverRecebedor("walker.chattag.cash", new ArrayList<String>(Arrays.asList("§eCash: §f%jogador_cash%")));
 			criarChatTag(jogador);
 			criarChatTag(new ChatTag("%grupo_tag%", "%grupo_cor%", "grupo"));
 			criarChatTag(new ChatTag("%grupoin_tag%", "%grupoout_cor%", "grupoin"));
@@ -171,7 +171,44 @@ public class ChatManager implements Listener {
 	}
 	
 	public void setChatTagCustom(String tag, CanalTag novo) {
-		tags.put(novo.getNome(), novo);
+		if (tags.containsKey(novo.getNome())) {
+			if (filetags.exists()) {
+				for (File channel : filetags.listFiles()) {
+					if(channel.getName().toLowerCase().endsWith(".yml")) {
+				        if(!channel.getName().toLowerCase().equals(channel.getName())) channel.renameTo(new File(WalkerEngine.get().getDataFolder(),"chattags"+File.separator+channel.getName().toLowerCase()));
+				        if (channel.getName().toLowerCase().replace(".yml", "").replace("{", "").replace("}", "").equalsIgnoreCase(tag)) {
+				        	loadChatTag(channel, novo);
+				        }
+					}
+			    }
+			}
+		}else tags.put(novo.getNome(), novo);
+	}
+	
+	public void loadChatTag(File tag, CanalTag tagg) {
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(tag);
+		tagg.setTag(config.getString("tag"));
+		tagg.setCor(config.getString("corTag"));
+		tagg.setNome(config.getString("nome"));
+		tagg.setUrl(null);
+		tagg.removeAllHovers();
+		tagg.setItem(null);
+		String onClick = config.getString("tipo.onClick");
+		if (onClick.equalsIgnoreCase("execute")) tagg.setExecuteComando(WalkersUtils.replaceStringByColor(config.getString("onClick")));
+		else if (onClick.equalsIgnoreCase("sugestao")) tagg.setSugestao(WalkersUtils.replaceStringByColor(config.getString("onClick")));
+		else if (onClick.equalsIgnoreCase("url")) tagg.setUrl(WalkersUtils.replaceStringByColor(config.getString("onClick")));
+		String onHover = config.getString("tipo.onHover");
+		if (onHover.equalsIgnoreCase("hover")) {
+			ConfigurationSection section = config.getConfigurationSection("onHover");
+			if (section != null) {
+				for (String s : config.getConfigurationSection("onHover").getKeys(false)) {
+					if(config.contains("onHover."+s.replace(".", "-")+".modelo")) tagg.setHover(s.replace("-", "."), WalkersUtils.replaceStringByColor(config.getStringList("onHover."+s.replace(".", "-")+".modelo")));
+					else if (config.contains("onHover."+s.replace(".", "-")+".modelo-recebedor")) tagg.setHoverRecebedor(s.replace("-", "."), WalkersUtils.replaceStringByColor(config.getStringList("onHover."+s.replace(".", "-")+".modelo-recebedor")));
+				}
+			}
+		}
+		tags.put(tagg.getNome(), tagg);
+		
 	}
 	
 	public void loadChatTag(File tag) {

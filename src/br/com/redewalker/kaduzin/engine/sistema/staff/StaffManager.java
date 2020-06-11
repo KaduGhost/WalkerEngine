@@ -20,6 +20,7 @@ public class StaffManager {
 			Staff staff = WalkerEngine.get().getConexaoManager().getStaffConnection().getStaff(usuario.getNickOriginal(), server);
 			staff.setGrupo(cargo);
 		}else WalkerEngine.get().getConexaoManager().getStaffConnection().createStaff(usuario.getNickOriginal(), cargo, server);
+		usuario.atualizarGrupo();
 		return;
 	}
 	
@@ -30,6 +31,7 @@ public class StaffManager {
 			Staff staff = WalkerEngine.get().getConexaoManager().getStaffConnection().getStaff(usuario.getNickOriginal(), server);
 			staff.setGrupo(cargo);
 		}else WalkerEngine.get().getConexaoManager().getStaffConnection().createStaff(usuario.getNickOriginal(), cargo, server);
+		usuario.atualizarGrupo();
 		return true;
 	}
 	

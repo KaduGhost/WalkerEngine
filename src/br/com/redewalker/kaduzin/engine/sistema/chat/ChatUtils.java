@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
+import br.com.redewalker.kaduzin.engine.utils.WalkersUtils;
 import br.net.fabiozumbi12.MinEmojis.Fanciful.FancyMessage;
 
 public class ChatUtils {
@@ -22,7 +23,7 @@ public class ChatUtils {
 			String colors = "krlmno";
 			for (char c : colors.toCharArray()) {
 				String cor = String.valueOf(c).toLowerCase();
-				if (msg.contains("&"+cor)) msg = msg.replace("&"+cor, "§"+cor);
+				if (msg.contains("&"+cor) && !"&k".equalsIgnoreCase("&"+cor)) msg = msg.replace("&"+cor, "§"+cor);
 			}
 		}
 		return corPrincipal+msg;

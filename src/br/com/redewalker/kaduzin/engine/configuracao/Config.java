@@ -22,6 +22,14 @@ public class Config extends Configuration {
 			get().set("Conexao.senha", "kaduzin");
 			get().set("Conexao.banco", "hpteste");
 		}
+		if (!get().contains("ConexaoServer.MySQL")) {
+			get().set("ConexaoServer.MySQL.ativar", false);
+			get().set("ConexaoServer.host", "localhost");
+			get().set("ConexaoServer.port", "3306");
+			get().set("ConexaoServer.usuario", "root");
+			get().set("ConexaoServer.senha", "kaduzin");
+			get().set("ConexaoServer.banco", "hpteste");
+		}
 		if (!get().contains("Permissoes.load-default-permissions")) get().set("Permissoes.load-default-permissions", true);
 		if (!get().contains("Mensagens.erro")) get().set("Mensagens.erro", "&c");
 		if (!get().contains("Mensagens.sucesso")) get().set("Mensagens.sucesso", "&a");
@@ -42,6 +50,7 @@ public class Config extends Configuration {
 		if (!get().contains("Punicoes.motivos.ofensajogador")) get().set("Punicoes.motivos.ofensajogador", 720);
 		if (!get().contains("Punicoes.motivos.ofensastaff")) get().set("Punicoes.motivos.ofensastaff", 0);
 		if (!get().contains("Punicoes.motivos.modnaopermitido")) get().set("Punicoes.motivos.modnaopermitido", 0);
+		if (!get().contains("Voar.mundos-permitidos")) get().set("Voar.mundos-permitidos", Arrays.asList("world", "world_the_end", "world_nether"));
 		if (!get().contains("Motd.Motds")) get().set("Motd.Motds", Arrays.asList("&2&lWalkers MC &7(1.8.x) - &e&lFactions &a&lApocalipse\n&eServidor em §b§lDESENVOLVIMENTO", "&2&lWalkers MC &7(1.8.x) - &e&lFactions &a&lApocalipse\n&dVarias novidades no ar. Chega ai mermão!"));
 		if (!get().contains("Manutencao.em-manutencao")) get().set("Manutencao.em-manutencao", false);
 		if (!get().contains("Manutencao.tempo-inicio-manutencao")) get().set("Manutencao.tempo-inicio-manutencao", 300);
@@ -52,6 +61,10 @@ public class Config extends Configuration {
 		if (!get().contains("Expulsar-sem-vip")) get().set("Expulsar-sem-vip", true);
 		if (!get().contains("Tempo-para-expulsar")) get().set("Tempo-para-expulsar", 60);
 		save();
+	}
+	
+	public List<String> getVoarMundos() {
+		return get().getStringList("Voar.mundos-permitidos");
 	}
 	
 	public void setLoadDefaultPermissions(boolean b) {
@@ -151,6 +164,30 @@ public class Config extends Configuration {
 
 	public String getConexaoBanco() {
 		return get().getString("Conexao.banco");
+	}
+	
+	public boolean getConexaoServerMySQL() {
+		return get().getBoolean("ConexaoServer.MySQL.ativar");
+	}
+
+	public String getConexaoServerHost() {
+		return get().getString("ConexaoServer.host");
+	}
+
+	public String getConexaoServerPort() {
+		return get().getString("ConexaoServer.port");
+	}
+
+	public String getConexaoServerUsuario() {
+		return get().getString("ConexaoServer.usuario");
+	}
+
+	public String getConexaoServerSenha() {
+		return get().getString("ConexaoServer.senha");
+	}
+
+	public String getConexaoServerBanco() {
+		return get().getString("ConexaoServer.banco");
 	}
 
 }

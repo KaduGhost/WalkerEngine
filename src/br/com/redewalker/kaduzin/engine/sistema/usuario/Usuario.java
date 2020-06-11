@@ -24,11 +24,11 @@ public class Usuario {
 	}
 	
 	public boolean hasPermission(String permission) {
-		return /*permissions.contains(permission.toLowerCase()) || */hasPermissionOP() || WalkerEngine.get().getGruposManager().hasPermission(getGrupoIn(), permission) || WalkerEngine.get().getGruposManager().hasPermission(getGrupoOut(), permission) || (getPlayer() instanceof Player && (getPlayer().hasPermission(permission)));
+		return /*permissions.contains(permission.toLowerCase()) ||*/ hasPermissionOP() || WalkerEngine.get().getGruposManager().hasPermission(getGrupoIn(), permission) || WalkerEngine.get().getGruposManager().hasPermission(getGrupoOut(), permission) /*|| (getPlayer() instanceof Player && (getPlayer().hasPermission(permission)))*/;
 	}
 	
 	private boolean hasPermissionOP() {
-		return /*permissions.contains("*") ||*/ WalkerEngine.get().getGruposManager().hasPermission(getGrupoIn(), "*") || WalkerEngine.get().getGruposManager().hasPermission(getGrupoOut(), "*") || (getPlayer() instanceof Player && (getPlayer().hasPermission("*") || getPlayer().isOp()));
+		return /*permissions.contains("*") ||*/ WalkerEngine.get().getGruposManager().hasPermission(getGrupoIn(), "*") || WalkerEngine.get().getGruposManager().hasPermission(getGrupoOut(), "*") /*|| (getPlayer() instanceof Player && (getPlayer().hasPermission("*") || getPlayer().isOp()))*/;
 	}
 	
 	public void atualizarGrupo() {
@@ -82,6 +82,14 @@ public class Usuario {
 	
 	public boolean isOnline() {
 		return WalkerEngine.get().getConexaoManager().getUsuarioConnection().getBoolean(nickOriginal, "online");
+	}
+	
+	public void setTell(boolean set) {
+		WalkerEngine.get().getConexaoManager().getUsuarioConnection().setBoolean(nickOriginal, "tell", set);
+	}
+	
+	public boolean isTell() {
+		return WalkerEngine.get().getConexaoManager().getUsuarioConnection().getBoolean(nickOriginal, "tell");
 	}
 	
 	public void getServer() {

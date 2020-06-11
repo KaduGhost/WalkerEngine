@@ -16,19 +16,33 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
+import br.com.redewalker.kaduzin.engine.apis.MensagensAPI;
+import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
 
 public class WalkersUtils {
+	
+	public static boolean isStringEmpty(String st) {
+		st=removeColorsOfString(st).replace(" ", "");
+		System.out.println(st+"teste");
+		return st.isEmpty();
+	}
 	
 	public static boolean isEmailValido(String email) {
 	      String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
@@ -234,7 +248,7 @@ public class WalkersUtils {
 			return paginaatual;
 		}
 		
-/*		public static ItemStack getItemComandos(String tipo, Jogador j) {
+		public static ItemStack getItemComandos(String tipo, Usuario j) {
 			switch (tipo) {
 			case "cabecamenu":
 				ItemStack cabeca = new ItemStack(Material.SKULL_ITEM, 1, (short)SkullType.PLAYER.ordinal());
@@ -293,7 +307,7 @@ public class WalkersUtils {
 			default:
 				return null;
 			}
-		}*/
+		}
 		
 		public static ItemStack getItemEditItem(String tipo, int inte, String str) {
 			switch (tipo) {
@@ -338,7 +352,7 @@ public class WalkersUtils {
 		
 	}
 	
-	/*public static class WalkersTeleporte {
+	public static class WalkersTeleporte {
 		
 		public static boolean teleporteJogadorParaJogador(Player p, Player loc, boolean silence, boolean safe, boolean instantaneo) {
 			if (safe && !isSafeLocation(loc.getLocation())) return false;
@@ -379,9 +393,9 @@ public class WalkersUtils {
 		
 		private static void teleporte(Player p, Location loc, int tempo, boolean silence, boolean title, String nome, boolean instantaneo) {
 			try{loc.getWorld().loadChunk(loc.getChunk().getX(), loc.getChunk().getZ());}catch (Exception e) {}
-			Jogador j = JogadoresAPI.getJogador(p.getName());
+			Usuario j = WalkerEngine.get().getUsuarioManager().getUsuario(p.getName());
 			long delay = 3;
-			if (!instantaneo && !j.hasPermission("walkers.teleporte.insta")) {
+			if (!instantaneo && !j.hasPermission("walker.teleporte.insta")) {
 				sendMessageWait(p, false, nome, tempo);
 				delay = 20*tempo;
 			}
@@ -410,8 +424,6 @@ public class WalkersUtils {
 	        return true;
 	    }
 	}
-	
-	*/
 	
 	public static class WalkersInventarios {
 		

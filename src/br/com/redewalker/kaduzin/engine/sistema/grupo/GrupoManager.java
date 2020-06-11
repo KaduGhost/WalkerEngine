@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
@@ -28,7 +29,8 @@ public class GrupoManager {
 		load();
 	}
 	
-	public void setGrupo(Usuario usuario, GrupoType tipo) {
+	public void setGrupoIn(Usuario usuario, GrupoType grupo, CommandSender autor) {
+		
 	}
 	
 	public void addPermission(GrupoType tipo, String permission) {
@@ -100,6 +102,8 @@ public class GrupoManager {
 				grupos.get(gp).setTag(new Tag("", "§7"));
 				grupos.get(gp).addPermission("walker.chat.chatglobal");
 				grupos.get(gp).addPermission("walker.chat.chatlocal");
+				grupos.get(gp).addPermission("walker.membro");
+				grupos.get(gp).addPermission("walker.comandos");
 				break;
 			case VIPLobby:
 				grupos.get(gp).setNome("VIP");
@@ -107,6 +111,7 @@ public class GrupoManager {
 				grupos.get(gp).addHeranca(GrupoType.Membro);
 				grupos.get(gp).addPermission("walker.chat.cor");
 				grupos.get(gp).addPermission("walker.chat.formato");
+				grupos.get(gp).addPermission("walker.teleporte.insta");
 				break;
 			case VIP1:
 				grupos.get(gp).setNome("VIP");
@@ -126,10 +131,12 @@ public class GrupoManager {
 			case YoutuberJr:
 				grupos.get(gp).setNome("YoutuberJr");
 				grupos.get(gp).setTag(new Tag("[YoutuberJr]", "§c"));
+				grupos.get(gp).addPermission("walker.divulgar");
 				break;
 			case Youtuber:
 				grupos.get(gp).setNome("Youtuber");
 				grupos.get(gp).setTag(new Tag("[Youtuber]", "§c"));
+				grupos.get(gp).addPermission("walker.divulgar");
 				break;
 			case ModeradorYT:
 				grupos.get(gp).setNome("Moderador Youtube");
@@ -148,6 +155,11 @@ public class GrupoManager {
 				grupos.get(gp).setTag(new Tag("[Staff]", "§e"));
 				grupos.get(gp).addHeranca(GrupoType.VIP3);
 				grupos.get(gp).addPermission("walker.chat.nodelay");
+				grupos.get(gp).addPermission("walker.chat.chatstaff");
+				grupos.get(gp).addPermission("walker.chat.chatstaffbungee");
+				grupos.get(gp).addPermission("walker.chat.bypass-spam");
+				grupos.get(gp).addPermission("walker.hat");
+				grupos.get(gp).addPermission("walker.tell.staff");
 				break;
 			case Ajudante:
 				grupos.get(gp).setNome("Ajudante");
@@ -159,22 +171,62 @@ public class GrupoManager {
 				grupos.get(gp).setTag(new Tag("[Moderador]", "§2"));
 				grupos.get(gp).addHeranca(GrupoType.VIP3);
 				grupos.get(gp).addHeranca(GrupoType.Ajudante);
+				grupos.get(gp).addPermission("walker.vanish.see");
+				grupos.get(gp).addPermission("walker.vanish");
+				grupos.get(gp).addPermission("walker.limparchat");
+				grupos.get(gp).addPermission("walker.reports");
+				grupos.get(gp).addPermission("walker.skull");
+				grupos.get(gp).addPermission("walker.speed");
+				grupos.get(gp).addPermission("fly.use");
+				grupos.get(gp).addPermission("clear.usar");
+				grupos.get(gp).addPermission("heal.use");
+				grupos.get(gp).addPermission("god.use");
+				grupos.get(gp).addPermission("speed.usar");
+				grupos.get(gp).addPermission("tp.usar");
 				break;
 			case Administrador:
 				grupos.get(gp).setNome("Administrador");
 				grupos.get(gp).setTag(new Tag("[Admin]", "§c"));
 				grupos.get(gp).addHeranca(GrupoType.Moderador);
+				grupos.get(gp).addPermission("walker.chat.bypass-antiip");
+				grupos.get(gp).addPermission("walker.broadcast.admin");
+				grupos.get(gp).addPermission("walker.crashar");
+				grupos.get(gp).addPermission("walker.executarsom");
+				grupos.get(gp).addPermission("walker.divulgar");
+				grupos.get(gp).addPermission("walker.limparchat.bypass");
+				grupos.get(gp).addPermission("walker.matar");
+				grupos.get(gp).addPermission("walker.timeset");
+				grupos.get(gp).addPermission("walker.title");
+				grupos.get(gp).addPermission("walker.voar.admin");
+				grupos.get(gp).addPermission("walker.comandos.bypass-delay");
+				grupos.get(gp).addPermission("clear.outros");
+				grupos.get(gp).addPermission("enchant.use");
+				grupos.get(gp).addPermission("heal.outros");
+				grupos.get(gp).addPermission("fly.outros");
+				grupos.get(gp).addPermission("give.usar");
+				grupos.get(gp).addPermission("god.outros");
+				grupos.get(gp).addPermission("repair.use");
+				grupos.get(gp).addPermission("skull.use");
+				grupos.get(gp).addPermission("title.usar");
+				grupos.get(gp).addPermission("tp.outros");
+				grupos.get(gp).addPermission("tphere.usar");
+				grupos.get(gp).addPermission("walker.chattag.cash");
 				break;
 			case Gerente:
 				grupos.get(gp).setNome("Gerente");
 				grupos.get(gp).setTag(new Tag("[Gerente]", "§4"));
 				grupos.get(gp).addHeranca(GrupoType.Administrador);
 				grupos.get(gp).addPermission("walker.staff.setar");
+				grupos.get(gp).addPermission("walker.cash.admin");
+				grupos.get(gp).addPermission("walker.cmdblock");
+				grupos.get(gp).addPermission("walker.matar.bypass");
+				grupos.get(gp).addPermission("walker.tell.bypass");
 				break;
 			case Master:
 				grupos.get(gp).setNome("Master");
 				grupos.get(gp).setTag(new Tag("[Master]", "§d"));
 				grupos.get(gp).addHeranca(GrupoType.Gerente);
+				grupos.get(gp).addPermission("*");
 				break;
 			default:
 				break;

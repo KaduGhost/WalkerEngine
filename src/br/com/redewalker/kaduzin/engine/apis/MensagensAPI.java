@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
-import br.com.redewalker.kaduzin.engine.sistema.grupos.GrupoType;
+import br.net.fabiozumbi12.MinEmojis.Fanciful.FancyMessage;
 
 public class MensagensAPI {
 	
@@ -37,14 +37,14 @@ public class MensagensAPI {
 		sender.sendMessage(getErro()+"Você não tem permissão para fazer isto.");
 	}
 	
-	public static void semPermissaoComando(GrupoType tipo, CommandSender sender) {
+	public static void semPermissaoComando(CommandSender sender) {
 		if (!isValido(sender)) return;
-		sender.sendMessage(getErro()+"Você precisa ser "+GruposAPI.getGrupo(tipo).getNome()+" ou superior para utilizar este comando.");
+		sender.sendMessage(getErro()+"Você precisa de permissão para utilizar este comando.");
 	}
 	
-	public static void semPermissaoOutro(GrupoType tipo, CommandSender sender, String outro) {
+	public static void semPermissaoOutro(CommandSender sender, String outro) {
 		if (!isValido(sender)) return;
-		sender.sendMessage(getErro()+"Você precisa ser "+GruposAPI.getGrupo(tipo).getNome()+" ou superior para utilizar "+outro+".");
+		sender.sendMessage(getErro()+"Você precisa de permissão para utilizar "+outro+".");
 	}
 	
 	public static void apenasJogadores(CommandSender sender) {

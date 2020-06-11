@@ -28,9 +28,14 @@ public class PlaceholderAPI {
 		String format = pattern.toLowerCase().replace("%", "");
 		String[] parts = format.split("_");
 		if (parts.length == 0) return pattern.toLowerCase();
-		if (exists(parts[0])) {
+		for (String key : placeholders.keySet()) {
+			String s = placeholders.get(key).checkPlaceholder(pattern, j, canal);
+			if (!s.equals(pattern)) return s;
+		}
+		return pattern;
+		/*if (exists(parts[0])) {
 			return placeholders.get(parts[0]).checkPlaceholder(pattern, j, canal);
-		} else return placeholders.get("walkers").checkPlaceholder(pattern, j, canal);
+		} else return placeholders.get("walkers").checkPlaceholder(pattern, j, canal);*/
 	}
 	
 	public String checkPlaceholders(String string, Usuario j, Canal canal) {
