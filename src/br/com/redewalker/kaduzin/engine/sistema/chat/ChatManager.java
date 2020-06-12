@@ -151,13 +151,12 @@ public class ChatManager implements Listener {
 	public void loadChatTags() {
 		tags.clear();
 		if (config.isLoadDefaultChatTags()) {
-			CanalTag jogador = new ChatTag("%jogador_nick%", "%grupo_cor%", "jogador");
+			CanalTag jogador = new ChatTag("%jogador_nick%", "§f", "jogador");
 			jogador.setHover("walker.membro", new ArrayList<String>(Arrays.asList("§eGrupo: §f%grupo_tag%")));
 			jogador.setHoverRecebedor("walker.chattag.cash", new ArrayList<String>(Arrays.asList("§eCash: §f%jogador_cash%")));
 			criarChatTag(jogador);
 			criarChatTag(new ChatTag("%grupo_tag%", "%grupo_cor%", "grupo"));
 			criarChatTag(new ChatTag("[%server_nome%] ", "§5", "server"));
-			criarChatTag(new ChatTag("%grupoin_tag%", "%grupoout_cor%", "grupoin"));
 			criarChatTag(new ChatTag("%grupoout_tag%", "%grupoout_cor%", "grupoout"));
 			criarChatTag(new ChatTag("%chat_tag%", "%chat_tag_cor%", "chat"));
 			config.setLoadDefaultChatTags(false);

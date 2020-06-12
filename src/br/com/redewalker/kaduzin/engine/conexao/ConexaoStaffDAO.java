@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoType;
+import br.com.redewalker.kaduzin.engine.sistema.server.Servers;
 import br.com.redewalker.kaduzin.engine.sistema.staff.Staff;
 
 public class ConexaoStaffDAO extends Conexao {
@@ -16,7 +17,7 @@ public class ConexaoStaffDAO extends Conexao {
 	}
 	
 	public void checkTable() {
-		String sql = "create table if not exists "+getNome()+"(id int, nick varchar(16) not null, grupo varchar(50) not null, server varchar(100), primary key(id));";
+		String sql = "create table if not exists "+getNome()+"(id int auto_increment, nick varchar(16) not null, grupo varchar(50) not null, server varchar(100), primary key(id));";
 		try {
 			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
 			st.execute();
@@ -38,13 +39,13 @@ public class ConexaoStaffDAO extends Conexao {
 		return null;
 	}
 	
-	public Staff getStaff(String nick, String server) {
+	public Staff getStaff(String nick, Servers server) {
 		if (!isStaffServer(nick, server)) return null;
 		String sql = "select * from "+getNome()+" where nick = ? and server = ?";
 		try {
 			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
 			st.setString(1, nick);
-			st.setString(2, server);
+			st.setString(2, server.toString());
 			ResultSet rs = st.executeQuery();
 			if (rs.next()) return new Staff(rs.getInt("id"));
 		} catch (SQLException e) {
@@ -59,6 +60,23 @@ public class ConexaoStaffDAO extends Conexao {
 		try {
 			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
 			st.setString(1, server);
+			ResultSet rs = st.executeQuery();
+			while (rs.next()) {
+				Staff staff = new Staff(rs.getInt("id"));
+				jogadores.put(rs.getInt("id"), staff);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return jogadores;
+	}
+	
+	public HashMap<Integer, Staff> getAllStaffs(String usuario) {
+		HashMap<Integer, Staff> jogadores = new HashMap<>();
+		String sql = "select * from "+getNome()+" where nick = ?";
+		try {
+			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
+			st.setString(1, usuario);
 			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
 				Staff staff = new Staff(rs.getInt("id"));
@@ -98,12 +116,12 @@ public class ConexaoStaffDAO extends Conexao {
 		}
 	}
 	
-	public boolean isStaffServer(String nick, String server) {
+	public boolean isStaffServer(String nick, Servers server) {
 		String sql = "select * from "+getNome()+" where nick = ? and server = ?";
 		try {
 			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
 			st.setString(1, nick);
-			st.setString(2, server);
+			st.setString(2, server.toString());
 			return st.executeQuery().next();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -111,14 +129,14 @@ public class ConexaoStaffDAO extends Conexao {
 		}
 	}
 	
-	public boolean createStaff(String nick, GrupoType grupo, String server) {
+	public boolean createStaff(String nick, GrupoType grupo, Servers server) {
 		if (isStaffServer(nick, server)) return false;
 		String sql = "insert into "+getNome()+"(nick,grupo,server) values(?,?,?)";
 		try {
 			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
 			st.setString(1, nick);
 			st.setString(2, grupo.toString());
-			st.setString(3, server);
+			st.setString(3, server.toString());
 			st.executeUpdate();
 			return true;
 		} catch (SQLException e) {
@@ -127,13 +145,37 @@ public class ConexaoStaffDAO extends Conexao {
 		}
 	}
 	
-	public void modifyStaff(int id, GrupoType grupo) {
+	public void modifyStaff(int id, GrupoType grupo, Servers server) {
 		if (!exists("id", id)) return; 
-		String sql = "update "+getNome()+" grupo = ? where id = ?";
+		String sql = "update "+getNome()+" set grupo = ?, server = ? where id = ?";
 		try {
 			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
 			st.setString(1, grupo.toString());
-			st.setInt(2, id);
+			st.setString(2, server.toString());
+			st.setInt(3, id);
+			st.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteStaff(String nick) {
+		String sql = "delete from "+getNome()+" where nick = ?";
+		try {
+			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
+			st.setString(1, nick);
+			st.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteStaff(Servers tipo, String nick) {
+		String sql = "delete from "+getNome()+" where nick = ? and server = ?";
+		try {
+			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
+			st.setString(1, nick);
+			st.setString(2, tipo.toString());
 			st.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

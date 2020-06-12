@@ -60,7 +60,7 @@ public class ComandoGrupo extends BukkitCommand {
 				MensagensAPI.mensagemErro("Você só pode definir grupos inferiores ao seu",sender);
 				return true;
 			}
-			WalkerEngine.get().getGruposManager().setGrupoIn(j2, gp, sender);
+			//WalkerEngine.get().getGruposManager().setGrupoIn(j2, gp, sender);
 			return true;
 		}
 		return false;

@@ -22,19 +22,31 @@ public class PlaceHookWalkers extends PlaceholderHook {
 		case "%grupo_cor%":
 			return grupo.getTag().getCor().toString();
 		case "%grupo_tag%":
+			return grupo.getTag().getTag();
+		case "%grupo_tag_full%":
 			return grupo.getTag().toString();
 		case "%grupo_nome%":
 			return grupo.getNome();
 		case "%grupoout_tag%":
+			return gpout.getTag().toString();
+		case "%grupoout_tag_full%":
 			return gpout.getTag().toString();
 		case "%grupoout_nome%":
 			return gpout.getNome();
 		case "%jogador_nick%":
 			return j.getNickOriginal();
 		case "%jogador_tag%":
+			return grupo.getTag().getTag();
+		case "%jogador_tag_full%":
 			return grupo.getTag().toString();
+		case "%server_tag%":
+			return WalkerEngine.get().getChatManager().getChatTag("{server}").getTag();
+		case "%server_tag_full%":
+			return WalkerEngine.get().getChatManager().getChatTag("{server}").getCor()+WalkerEngine.get().getChatManager().getChatTag("{server}").getTag();
 		case "%server_nome%":
 			return WalkerEngine.get().getServerType().toString();
+		case "%server_cor%":
+			return WalkerEngine.get().getChatManager().getChatTag("{server}").getCor();
 		case "%jogador_cash%":
 			return NumberFormat.getInstance().format(j.getCash());
 		case "%chat_tag%":

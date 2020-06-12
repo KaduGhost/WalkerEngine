@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoType;
 import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoType.CargoType;
+import br.com.redewalker.kaduzin.engine.sistema.staff.Staff;
 
 public class Usuario {
 	
@@ -36,10 +37,11 @@ public class Usuario {
 		if (!istaff && getGrupoIn().isStaff()) {
 			setGrupoIn(GrupoType.Membro); 
 			return;
+		}else if (istaff) {
+			Staff s = WalkerEngine.get().getStaffManager().getStaffAtivoNoServer(this, WalkerEngine.get().getServerType());
+			if (s != null) setGrupoIn(s.getGrupo());
+			else setGrupoIn(GrupoType.Staff);
 		}
-		if (WalkerEngine.get().getStaffManager().isStaffInServer(getNickOriginal(), WalkerEngine.get().getServerType().toString())) {
-			setGrupoIn(WalkerEngine.get().getStaffManager().getGrupoStaffInServer(this));
-		}else if (istaff) setGrupoIn(GrupoType.Staff);
 	}
 	
 	public Player getPlayer() {

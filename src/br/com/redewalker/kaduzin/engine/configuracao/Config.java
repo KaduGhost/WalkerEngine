@@ -14,6 +14,7 @@ public class Config extends Configuration {
 	}
 	
 	public void checkEstrutura() {
+		if (!get().contains("Server-ID")) get().set("Server-ID", "Lobby");
 		if (!get().contains("Conexao.MySQL")) {
 			get().set("Conexao.MySQL.ativar", false);
 			get().set("Conexao.host", "localhost");
@@ -61,6 +62,10 @@ public class Config extends Configuration {
 		if (!get().contains("Expulsar-sem-vip")) get().set("Expulsar-sem-vip", true);
 		if (!get().contains("Tempo-para-expulsar")) get().set("Tempo-para-expulsar", 60);
 		save();
+	}
+	
+	public String getServerNome() {
+		return get().getString("Server-ID");
 	}
 	
 	public List<String> getVoarMundos() {

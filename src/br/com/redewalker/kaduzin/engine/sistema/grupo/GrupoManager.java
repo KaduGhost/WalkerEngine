@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
@@ -27,10 +26,6 @@ public class GrupoManager {
 		arquivo = YamlConfiguration.loadConfiguration(file);
 		checkData();
 		load();
-	}
-	
-	public void setGrupoIn(Usuario usuario, GrupoType grupo, CommandSender autor) {
-		
 	}
 	
 	public void addPermission(GrupoType tipo, String permission) {
@@ -54,6 +49,8 @@ public class GrupoManager {
 	}
 	
 	public boolean isSuperior(Usuario j, Usuario j2) {
+		j.atualizarGrupo();
+		j2.atualizarGrupo();
 		return j.getGrupoIn().getPrioridade() > j2.getGrupoIn().getPrioridade();
 	}
 	
@@ -211,16 +208,17 @@ public class GrupoManager {
 				grupos.get(gp).addPermission("tp.outros");
 				grupos.get(gp).addPermission("tphere.usar");
 				grupos.get(gp).addPermission("walker.chattag.cash");
+				grupos.get(gp).addPermission("walker.staff.setar");
 				break;
 			case Gerente:
 				grupos.get(gp).setNome("Gerente");
 				grupos.get(gp).setTag(new Tag("[Gerente]", "§4"));
 				grupos.get(gp).addHeranca(GrupoType.Administrador);
-				grupos.get(gp).addPermission("walker.staff.setar");
 				grupos.get(gp).addPermission("walker.cash.admin");
 				grupos.get(gp).addPermission("walker.cmdblock");
 				grupos.get(gp).addPermission("walker.matar.bypass");
 				grupos.get(gp).addPermission("walker.tell.bypass");
+				grupos.get(gp).addPermission("walker.staff.setar.gerente");
 				break;
 			case Master:
 				grupos.get(gp).setNome("Master");

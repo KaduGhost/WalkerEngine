@@ -4,33 +4,39 @@ import java.util.EnumSet;
 
 public enum GrupoType {
 	
-	Master(CargoType.Staff, 1000),
-	Gerente(CargoType.Staff, 990),
-	Administrador(CargoType.Staff, 980),
-	Moderador(CargoType.Staff, 970),
-	Ajudante(CargoType.Staff, 960),
-	Staff(CargoType.Staff,950),
+	Master(CargoType.Staff, 1000, CargoServerType.Rede),
+	Gerente(CargoType.Staff, 990, CargoServerType.Rede),
+	Administrador(CargoType.Staff, 980, CargoServerType.Server),
+	Moderador(CargoType.Staff, 970, CargoServerType.Server),
+	Ajudante(CargoType.Staff, 960, CargoServerType.Server),
+	Staff(CargoType.Staff,950, CargoServerType.Server),
 	
-	Desenvolvedor(CargoType.Tag,900),
-	Arquiteto(CargoType.Tag,890),
-	ModeradorDiscord(CargoType.Tag,880),
-	ModeradorMidia(CargoType.Tag,870),
-	ModeradorYT(CargoType.Tag,860),
-	Youtuber(CargoType.Tag,850),
-	YoutuberJr(CargoType.Tag,840),
+	Desenvolvedor(CargoType.Tag,900, CargoServerType.Rede),
+	Arquiteto(CargoType.Tag,890, CargoServerType.Rede),
+	ModeradorDiscord(CargoType.Tag,880, CargoServerType.Rede),
+	ModeradorMidia(CargoType.Tag,870, CargoServerType.Rede),
+	ModeradorYT(CargoType.Tag,860, CargoServerType.Rede),
+	Youtuber(CargoType.Tag,850, CargoServerType.Server),
+	YoutuberJr(CargoType.Tag,840, CargoServerType.Server),
 	
-	VIP3(CargoType.VIP, 4),
-	VIP2(CargoType.VIP, 3),
-	VIP1(CargoType.VIP, 2),
-	VIPLobby(CargoType.VIP,1),
-	Membro(CargoType.Membro, 0);
+	VIP3(CargoType.VIP, 4, CargoServerType.Server),
+	VIP2(CargoType.VIP, 3, CargoServerType.Server),
+	VIP1(CargoType.VIP, 2, CargoServerType.Server),
+	VIPLobby(CargoType.VIP,1, CargoServerType.Rede),
+	Membro(CargoType.Membro, 0, CargoServerType.Server);
 	
 	private int prioridade;
 	private CargoType tipo;
+	private CargoServerType server;
 	
-	private GrupoType(CargoType tipo, int prioridade) {
+	private GrupoType(CargoType tipo, int prioridade, CargoServerType server) {
 		this.prioridade = prioridade;
 		this.tipo = tipo;
+		this.server = server;
+	}
+	
+	public CargoServerType getServer() {
+		return server;
 	}
 	
 	public CargoType getTipo() {
@@ -69,6 +75,12 @@ public enum GrupoType {
 			if (nome.equalsIgnoreCase(gp.toString())) return gp;
 		}
 		return Membro;
+	}
+	
+	public enum CargoServerType {
+		
+		Rede, Server;
+		
 	}
 	
 	public enum CargoType {

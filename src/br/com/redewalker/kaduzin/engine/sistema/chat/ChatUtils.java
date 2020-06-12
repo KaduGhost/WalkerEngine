@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
-import br.com.redewalker.kaduzin.engine.utils.WalkersUtils;
 import br.net.fabiozumbi12.MinEmojis.Fanciful.FancyMessage;
 
 public class ChatUtils {
@@ -48,7 +47,7 @@ public class ChatUtils {
 					CanalTag ct = WalkerEngine.get().getChatManager().getChatTag(latestTag);
 					if (ct != null) {
 						if (ct.isPlayerCanUse(j.getNickOriginal())) {
-							String add = WalkerEngine.get().getPlaceholderAPI().checkPlaceholders(ct.getTag(), j, canal);
+							String add = WalkerEngine.get().getPlaceholderAPI().checkPlaceholders(ct.getCor(), j, canal)+WalkerEngine.get().getPlaceholderAPI().checkPlaceholders(ct.getTag(), j, canal);
 							if (!checkVazia(add)) {
 								if (ultimoadicionado.endsWith(" ") && latest.startsWith(" ")) latest = latest.replaceFirst(" ", "");
 								fancy.then(add);

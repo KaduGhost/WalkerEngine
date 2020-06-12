@@ -248,6 +248,21 @@ public class WalkersUtils {
 			return paginaatual;
 		}
 		
+		public static ItemStack getItemStaff(String tipo, Usuario j) {
+			switch (tipo) {
+			case "info":
+				return new ItemBuilder(Material.BOOK_AND_QUILL).setName("§eAjuda menu").setLore(Arrays.asList(" §7Neste menu você pode ver", " §7todas as informações de todos", " §7os staffs da rede.")).fazer();
+			case "editarstaffs":
+				return new ItemBuilder(Material.ANVIL).setName("§eEditar cargos").setLore(Arrays.asList(" §7Clique para ver e editar a", " §7staff do servidor.")).fazer();
+			case "verstaffserver":
+				return new ItemBuilder(Material.EMERALD).setName("§eVer equipe do servidor").setLore(Arrays.asList(" §7Neste menu você pode ver", " §7e editar a staff do servidor.")).fazer();
+			case "verstaffrede":
+				return new ItemBuilder(Material.NETHER_STAR).setName("§eVer equipe da rede").setLore(Arrays.asList(" §7Neste menu você pode ver", " §7e editar a staff da rede.")).fazer();
+			default:
+				return null;
+			}
+		}
+		
 		public static ItemStack getItemComandos(String tipo, Usuario j) {
 			switch (tipo) {
 			case "cabecamenu":

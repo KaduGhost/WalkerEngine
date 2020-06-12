@@ -21,6 +21,7 @@ import br.com.redewalker.kaduzin.engine.comandos.ComandoMatar;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoR;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoSkull;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoSpeed;
+import br.com.redewalker.kaduzin.engine.comandos.ComandoStaff;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoSudo;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoTell;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoTimeSet;
@@ -35,7 +36,7 @@ import br.com.redewalker.kaduzin.engine.sistema.comando.ComandosManager;
 import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoManager;
 import br.com.redewalker.kaduzin.engine.sistema.placeholder.PlaceHookWalkers;
 import br.com.redewalker.kaduzin.engine.sistema.placeholder.PlaceholderAPI;
-import br.com.redewalker.kaduzin.engine.sistema.server.ServerType;
+import br.com.redewalker.kaduzin.engine.sistema.server.Servers;
 import br.com.redewalker.kaduzin.engine.sistema.staff.StaffManager;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.UsuarioManager;
 import br.com.redewalker.kaduzin.engine.sistema.vanish.VanishManager;
@@ -56,7 +57,7 @@ public class WalkerEngine extends JavaPlugin {
 	private VoarManager voarManager;
 	private boolean isUseProtocolLib;
 	private String tag;
-	private ServerType server = ServerType.Lobby;
+	private Servers server;
 	private static CommandSender console = Bukkit.getConsoleSender();
 	
 	public static WalkerEngine get() {
@@ -68,6 +69,8 @@ public class WalkerEngine extends JavaPlugin {
 		instance = this;
 		tag = "("+getName()+") ";
 		config = new ConfigManager(this);
+		server = Servers.getTipo(config.getConfigPrincipal().getServerNome());
+		console.sendMessage(server.toString());
 		conexaoAPI = new ConexaoManager(getConfigManager().getConfigPrincipal());
 		usuarioManager = new UsuarioManager();
 		grupoManager = new GrupoManager(config.getConfigPrincipal());
@@ -119,7 +122,7 @@ public class WalkerEngine extends JavaPlugin {
 		return false;
 	}
 	
-	public ServerType getServerType() {
+	public Servers getServerType() {
 		return server;
 	}
 	
@@ -179,6 +182,7 @@ public class WalkerEngine extends JavaPlugin {
 	public void registrarComandos() {
 		comandosManager.registrarComando(new ComandoCash("cash"), "walker.membro", 0);
 		comandosManager.registrarComando(new ComandoGrupo("grupo"), "walker.grupos.admin", 0);
+		comandosManager.registrarComando(new ComandoStaff("staff"), "walker.staff", 0);
 		comandosManager.registrarComando(new ComandoBroadcast("broadcast"), "walker.broadcast.admin", 0);
 		comandosManager.registrarComando(new ComandoHat("hat"), "walker.hat", 0);
 		comandosManager.registrarComando(new ComandoMatar("matar"), "walker.matar", 0);
