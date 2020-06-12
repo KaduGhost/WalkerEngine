@@ -32,6 +32,7 @@ import br.com.redewalker.kaduzin.engine.configuracao.ConfigManager;
 import br.com.redewalker.kaduzin.engine.listeners.ComandosListeners;
 import br.com.redewalker.kaduzin.engine.listeners.UsuarioListeners;
 import br.com.redewalker.kaduzin.engine.sistema.chat.ChatManager;
+import br.com.redewalker.kaduzin.engine.sistema.chat.bungee.WalkerChatBungee;
 import br.com.redewalker.kaduzin.engine.sistema.comando.ComandosManager;
 import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoManager;
 import br.com.redewalker.kaduzin.engine.sistema.placeholder.PlaceHookWalkers;
@@ -40,7 +41,7 @@ import br.com.redewalker.kaduzin.engine.sistema.server.Servers;
 import br.com.redewalker.kaduzin.engine.sistema.staff.StaffManager;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.UsuarioManager;
 import br.com.redewalker.kaduzin.engine.sistema.vanish.VanishManager;
-import br.com.redewalker.kaduzin.engine.sistema.voar.VoarManager;
+//import br.com.redewalker.kaduzin.engine.sistema.voar.VoarManager;
 
 public class WalkerEngine extends JavaPlugin {
 	
@@ -54,7 +55,7 @@ public class WalkerEngine extends JavaPlugin {
 	private PlaceholderAPI placeholder;
 	private ComandosManager comandosManager;
 	private VanishManager vanishManager;
-	private VoarManager voarManager;
+	//private VoarManager voarManager;
 	private boolean isUseProtocolLib;
 	private String tag;
 	private Servers server;
@@ -78,20 +79,21 @@ public class WalkerEngine extends JavaPlugin {
 		chatManager = new ChatManager(getConfigManager().getConfigChat());
 		comandosManager = new ComandosManager(getConfigManager().getConfigComando());
 		vanishManager = new VanishManager();
-		voarManager = new VoarManager(getConfigManager().getConfigPrincipal());
+//		voarManager = new VoarManager(getConfigManager().getConfigPrincipal());
 		placeholder = new PlaceholderAPI();
 		if (!checkHooks()) {
 			console.sendMessage("§c"+tag+" Server desligando por não encontrar plugins necessários para seu funcionamento.");
 			Bukkit.shutdown();
 			return;
 		}
-		try {
-			placeholder.registerPlaceHolder(new PlaceHookWalkers("walkers"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		try {placeholder.registerPlaceHolder(new PlaceHookWalkers("walkers"));} catch (Exception e) {e.printStackTrace();}
+		
 		registrarEventos();
 		registrarComandos();
+		
+		getServer().getMessenger().registerOutgoingPluginChannel(this, "bungee:walkerchat");
+        getServer().getMessenger().registerIncomingPluginChannel(this, "bungee:walkerchat", new WalkerChatBungee());
+        
 		console.sendMessage("§a"+tag+" Plugin iniciado com sucesso!");
 		new BukkitRunnable() {
 			@Override
@@ -126,9 +128,9 @@ public class WalkerEngine extends JavaPlugin {
 		return server;
 	}
 	
-	public VoarManager getVoarManager() {
-		return voarManager;
-	}
+//	public VoarManager getVoarManager() {
+//		return voarManager;
+//	}
 	
 	public FileConfiguration getConfig() {
 		return config.getConfigPrincipal().get();

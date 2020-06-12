@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.apis.MensagensAPI;
 import br.com.redewalker.kaduzin.engine.apis.VanishAPI;
+import br.com.redewalker.kaduzin.engine.sistema.chat.bungee.WalkerChatBungee;
 import br.com.redewalker.kaduzin.engine.sistema.tag.Tag;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
 
@@ -148,38 +149,41 @@ public class ChatPermanente implements Canal {
 		boolean prox = false;
 		boolean prox1 = false;
 		if (isIgnorando(j)) removeIgnorar(j);
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			Usuario j2 = WalkerEngine.get().getUsuarioManager().getUsuario(p.getName());
-			if (j.getNickOriginal().equalsIgnoreCase(j2.getNickOriginal())) {
-				ChatUtils.formatarMensagem(this, j, message, j2).send(p);
-				continue;
-			}
-			if (getDistancia() > 0) {
-				if (sender.getLocation().distance(p.getLocation()) <= getDistancia()) {
-					if (j2.hasPermission("walker.chat.chat"+nome) && (!j2.isVanish() || VanishAPI.usuarioCanSeeVanish(j))) prox = true;
-					if (j2.hasPermission("walker.chat.chat"+nome)) prox1 =true;
+		if (isBungee()) WalkerChatBungee.sendBungee(this, ChatUtils.formatarMensagem(this, j, message, j));
+		else {
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				Usuario j2 = WalkerEngine.get().getUsuarioManager().getUsuario(p.getName());
+				if (j.getNickOriginal().equalsIgnoreCase(j2.getNickOriginal())) {
+					ChatUtils.formatarMensagem(this, j, message, j2).send(p);
+					continue;
 				}
-				if (!isEntreMundos()) {
-					if (mundos.size() == 0 || !mundos.contains(sender.getLocation().getWorld().getName().toLowerCase())) {
-						MensagensAPI.mensagemErro("Este canal não pode ser utilizado neste mundo",sender);
-						return;
+				if (getDistancia() > 0) {
+					if (sender.getLocation().distance(p.getLocation()) <= getDistancia()) {
+						if (j2.hasPermission("walker.chat.chat"+nome) && (!j2.isVanish() || VanishAPI.usuarioCanSeeVanish(j))) prox = true;
+						if (j2.hasPermission("walker.chat.chat"+nome)) prox1 =true;
 					}
+					if (!isEntreMundos()) {
+						if (mundos.size() == 0 || !mundos.contains(sender.getLocation().getWorld().getName().toLowerCase())) {
+							MensagensAPI.mensagemErro("Este canal não pode ser utilizado neste mundo",sender);
+							return;
+						}
+					}
+				}else {
+					prox1 =true;
+					prox = true;
 				}
-			}else {
-				prox1 =true;
-				prox = true;
-			}
-			if (j2.hasPermission("walker.chat.chat"+nome)) {
-				if (prox1 && !isIgnorando(j2)) ChatUtils.formatarMensagem(this, j, message, j2).send(p);
-			}
-		}
-		if (!prox && getDistancia() > 0) {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					MensagensAPI.mensagemErro("Nenhum jogador que pode ver este canal está proximo",sender);
+				if (j2.hasPermission("walker.chat.chat"+nome)) {
+					if (prox1 && !isIgnorando(j2)) ChatUtils.formatarMensagem(this, j, message, j2).send(p);
 				}
-			}.runTaskLater(WalkerEngine.get(), 15);
+			}
+			if (!prox && getDistancia() > 0) {
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						MensagensAPI.mensagemErro("Nenhum jogador que pode ver este canal está proximo",sender);
+					}
+				}.runTaskLater(WalkerEngine.get(), 15);
+			}
 		}
 	}
 
@@ -219,12 +223,10 @@ public class ChatPermanente implements Canal {
 		return false;
 	}
 
-	@Override
 	public boolean isBungee() {
 		return bungee;
 	}
 
-	@Override
 	public void setBungee(boolean set) {
 		this.bungee = set;
 	}

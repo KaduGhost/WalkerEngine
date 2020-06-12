@@ -113,11 +113,11 @@ public class WalkersUtils {
 	
 	public static void performCommand(Player to, CommandSender sender, String command) {
         Bukkit.getScheduler().runTask(WalkerEngine.get(), () -> {
-            if (to == null || to.isOnline()) {
-                WalkerEngine.get().getServer().dispatchCommand(sender, command);
-            }
+            if (to == null || to.isOnline()) WalkerEngine.get().getServer().dispatchCommand(sender, command);
         });
     }
+	
+	
 	
 	public static ArrayList<String> replaceColorByString(ArrayList<String> rec) {
 		ArrayList<String> arr = new ArrayList<String>();

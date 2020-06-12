@@ -24,38 +24,38 @@ public class StaffManager implements Listener {
 		Bukkit.getServer().getPluginManager().registerEvents(this, WalkerEngine.get());
 	}
 	
-	public boolean removerStaff(Usuario usuario, Servers server, Usuario autor) {
-		if (autor instanceof Usuario && !autor.hasPermission("walker.staff.setar")) return false;
+	public void removerStaff(Usuario usuario, Servers server, Usuario autor) throws Exception {
+		if (autor instanceof Usuario && !autor.hasPermission("walker.staff.setar")) throw new Exception("Você não tem permissão para alterar o cargo de algum jogador");
 		Staff s = getStaffNoServer(usuario, Servers.Rede);
 		if (s != null) {
-			if (autor instanceof Usuario && (!autor.hasPermission("walker.staff.setar.gerente"))) return false;
-			if (autor instanceof Usuario && (s.getGrupo().getPrioridade() >= autor.getGrupoIn().getPrioridade())) return false;
+			if (autor instanceof Usuario && (!autor.hasPermission("walker.staff.setar.gerente"))) throw new Exception("Você não tem permissão para alterar o cargo de algum jogador na rede");
+			if (autor instanceof Usuario && (s.getGrupo().getPrioridade() >= autor.getGrupoIn().getPrioridade())) throw new Exception("Você não pode alterar o cargo de um superior");
 			UsuarioRemovidoStaffEvent event = new UsuarioRemovidoStaffEvent(usuario, s.getGrupo(), autor);
 			WalkerEngine.get().getConexaoManager().getStaffConnection().deleteStaff(usuario.getNickOriginal());
 			WalkerEngine.get().getServer().getPluginManager().callEvent(event);
 		}else {
-			if (server.getTipo().equals(ServerType.Lobby)) return false;
+			if (server.getTipo().equals(ServerType.Lobby)) throw new Exception("Você não pode atribuir cargo exclusivo de servidor no lobby");
 			s = getStaffNoServer(usuario, server);
 			if (s != null) {
-				if (autor instanceof Usuario && (s.getGrupo().getPrioridade() >= autor.getGrupoIn().getPrioridade())) return false;
+				if (autor instanceof Usuario && (s.getGrupo().getPrioridade() >= autor.getGrupoIn().getPrioridade())) throw new Exception("Você não pode alterar o cargo de um superior");
 				UsuarioRemovidoStaffEvent event = new UsuarioRemovidoStaffEvent(usuario, s.getGrupo(), autor);
 				WalkerEngine.get().getConexaoManager().getStaffConnection().deleteStaff(s.getId());
 				WalkerEngine.get().getServer().getPluginManager().callEvent(event);
 			}
 		}
 		usuario.atualizarGrupo();
-		return true;
 	}
 	
-	public boolean setStaff(Usuario usuario, Servers server, GrupoType grupo, Usuario autor) {
-		if (grupo.equals(GrupoType.Staff)) return false;
-		if (autor instanceof Usuario && !autor.hasPermission("walker.staff.setar")) return false;
-		if (autor instanceof Usuario && autor.getGrupoIn().getPrioridade() <= grupo.getPrioridade()) return false;
+	public void setStaff(Usuario usuario, Servers server, GrupoType grupo, Usuario autor) throws Exception {
+		if (!grupo.isStaff() || grupo.equals(GrupoType.Staff)) throw new Exception("Este cargo não faz parte da equipe do servidor");
+		if (autor instanceof Usuario && !autor.hasPermission("walker.staff.setar")) throw new Exception("Você não tem permissão para alterar o cargo de algum jogador");
+		if (grupo.getPrioridade() >= autor.getGrupoIn().getPrioridade()) throw new Exception("Você não tem permissão para definir cargos superiores ou igual ao seu");
+		if (autor instanceof Usuario && autor.getGrupoIn().getPrioridade() <= grupo.getPrioridade()) throw new Exception("Você não pode alterar o cargo de um superior");
 		if (grupo.getServer().equals(CargoServerType.Rede)) {
-			if (autor instanceof Usuario && (!autor.hasPermission("walker.staff.setar.gerente"))) return false;
+			if (autor instanceof Usuario && (!autor.hasPermission("walker.staff.setar.gerente"))) throw new Exception("Você não tem permissão para alterar o cargo de algum jogador na rede");
 			Staff s = getStaffNoServer(usuario, Servers.Rede);
 			if (s != null) {
-				if (autor instanceof Usuario && (s.getGrupo().getPrioridade() >= autor.getGrupoIn().getPrioridade())) return false;
+				if (autor instanceof Usuario && (s.getGrupo().getPrioridade() >= autor.getGrupoIn().getPrioridade())) throw new Exception("Você não pode alterar o cargo de um superior");
 				UsuarioAlteradoStaffEvent event = new UsuarioAlteradoStaffEvent(usuario, s.getGrupo(),grupo, autor);
 				WalkerEngine.get().getConexaoManager().getStaffConnection().modifyStaff(s.getId(), grupo, Servers.Rede);
 				WalkerEngine.get().getServer().getPluginManager().callEvent(event);
@@ -65,15 +65,15 @@ public class StaffManager implements Listener {
 				WalkerEngine.get().getServer().getPluginManager().callEvent(new UsuarioEntrouStaffEvent(usuario, grupo, autor));
 			}
 		}else {
-			if (server.getTipo().equals(ServerType.Lobby)) return false;
+			if (server.getTipo().equals(ServerType.Lobby)) throw new Exception("Você não pode atribuir cargo exclusivo de servidor no lobby");
 			Staff s = getStaffNoServer(usuario, Servers.Rede);
 			if (s != null) {
-				if (autor instanceof Usuario && (s.getGrupo().getPrioridade() >= autor.getGrupoIn().getPrioridade())) return false;
+				if (autor instanceof Usuario && (s.getGrupo().getPrioridade() >= autor.getGrupoIn().getPrioridade())) throw new Exception("Você não pode alterar o cargo de um superior");
 				WalkerEngine.get().getConexaoManager().getStaffConnection().deleteStaff(s.getId());
 			}
 			s = getStaffNoServer(usuario, server);
 			if (s != null) {
-				if (autor instanceof Usuario && (s.getGrupo().getPrioridade() >= autor.getGrupoIn().getPrioridade())) return false;
+				if (autor instanceof Usuario && (s.getGrupo().getPrioridade() >= autor.getGrupoIn().getPrioridade())) throw new Exception("Você não pode alterar o cargo de um superior");
 				UsuarioAlteradoStaffEvent event = new UsuarioAlteradoStaffEvent(usuario, s.getGrupo(),grupo, autor);
 				WalkerEngine.get().getConexaoManager().getStaffConnection().modifyStaff(s.getId(), grupo, server);
 				WalkerEngine.get().getServer().getPluginManager().callEvent(event);
@@ -83,7 +83,6 @@ public class StaffManager implements Listener {
 			}
 		}
 		usuario.atualizarGrupo();
-		return true;
 	}
 	
 	public boolean isStaffNoServer(Usuario usuario, Servers server) {

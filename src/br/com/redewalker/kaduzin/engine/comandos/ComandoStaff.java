@@ -2,7 +2,6 @@ package br.com.redewalker.kaduzin.engine.comandos;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
-import org.bukkit.entity.Player;
 
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.apis.MensagensAPI;
@@ -50,11 +49,11 @@ public class ComandoStaff extends BukkitCommand {
 			return true;
 		}else if (args.length == 2) {
 			if (args[1].equalsIgnoreCase("remover")) {
-				if (sender instanceof Player && !WalkerEngine.get().getGruposManager().isSuperior(j, j2)) {
-					MensagensAPI.mensagemErro("Você só pode definir grupos inferiores ao seu",sender);
-					return true;
+				try {
+					WalkerEngine.get().getStaffManager().removerStaff(j2, WalkerEngine.get().getServerType(), j);
+				} catch (Exception e) {
+					MensagensAPI.mensagemErro(e.getMessage(),sender);
 				}
-				if (!WalkerEngine.get().getStaffManager().removerStaff(j2, WalkerEngine.get().getServerType(), j)) MensagensAPI.mensagemErro("Você não conseguiu alterar a equipe do servidor", sender);
 				return true;
 			}
 			if (!GrupoType.isExists(args[1])) {
@@ -62,15 +61,11 @@ public class ComandoStaff extends BukkitCommand {
 				return true;
 			}
 			GrupoType gp = GrupoType.getTipo(args[1]);
-			if (sender instanceof Player && (!gp.isStaff() || gp.equals(GrupoType.Staff))) {
-				MensagensAPI.mensagemErro("Este grupo não faz parte da staff",sender);
-				return true;
+			try {
+				WalkerEngine.get().getStaffManager().setStaff(j2, WalkerEngine.get().getServerType(), gp, j);
+			} catch (Exception e) {
+				MensagensAPI.mensagemErro(e.getMessage(),sender);
 			}
-			if (sender instanceof Player && !WalkerEngine.get().getGruposManager().isSuperior(j, j2)) {
-				MensagensAPI.mensagemErro("Você só pode definir grupos inferiores ao seu",sender);
-				return true;
-			}
-			if (!WalkerEngine.get().getStaffManager().setStaff(j2, WalkerEngine.get().getServerType(), gp, j)) MensagensAPI.mensagemErro("Você não conseguiu alterar a equipe do servidor", sender);
 			return true;
 		}else if (args.length == 3) {
 			if (j instanceof Usuario && !j.hasPermission("walker.staff.setar.gerente")) {
@@ -84,11 +79,11 @@ public class ComandoStaff extends BukkitCommand {
 				return true;
 			}
 			if (args[1].equalsIgnoreCase("remover")) {
-				if (sender instanceof Player && !WalkerEngine.get().getGruposManager().isSuperior(j, j2)) {
-					MensagensAPI.mensagemErro("Você só pode definir grupos inferiores ao seu",sender);
-					return true;
+				try {
+					WalkerEngine.get().getStaffManager().removerStaff(j2, server, j);
+				} catch (Exception e) {
+					MensagensAPI.mensagemErro(e.getMessage(),sender);
 				}
-				if (!WalkerEngine.get().getStaffManager().removerStaff(j2, server, j)) MensagensAPI.mensagemErro("Você não conseguiu alterar a equipe do servidor", sender);
 				return true;
 			}
 			if (!GrupoType.isExists(args[1])) {
@@ -96,46 +91,12 @@ public class ComandoStaff extends BukkitCommand {
 				return true;
 			}
 			GrupoType gp = GrupoType.getTipo(args[1]);
-			if (sender instanceof Player && (!gp.isStaff() || gp.equals(GrupoType.Staff))) {
-				MensagensAPI.mensagemErro("Este grupo não faz parte da staff",sender);
-				return true;
+			try {
+				WalkerEngine.get().getStaffManager().setStaff(j2, server, gp, j);
+			} catch (Exception e) {
+				MensagensAPI.mensagemErro(e.getMessage(),sender);
 			}
-			if (sender instanceof Player && !WalkerEngine.get().getGruposManager().isSuperior(j, j2)) {
-				MensagensAPI.mensagemErro("Você só pode definir grupos inferiores ao seu",sender);
-				return true;
-			}
-			if (!WalkerEngine.get().getStaffManager().setStaff(j2, server, gp, j)) MensagensAPI.mensagemErro("Você não conseguiu alterar a equipe do servidor", sender);
 			return true;
-			
-			
-			
-			
-			
-			
-			
-			
-			/*if (!GrupoType.isExists(args[1])) {
-				MensagensAPI.grupoNaoEncontrado(sender);
-				return true;
-			}
-			GrupoType gp = GrupoType.getTipo(args[1]);
-			
-			//adicionar check se server existe
-			
-			if (sender instanceof Player && !j.getGrupoIn().equals(GrupoType.Master) && (gp.equals(GrupoType.Master))) {
-				MensagensAPI.mensagemErro("Apenas Masters podem definir este grupo",sender);
-				return true;
-			}
-			if (sender instanceof Player && (!gp.isStaff() || gp.equals(GrupoType.Staff))) {
-				MensagensAPI.mensagemErro("Este grupo não faz parte da staff",sender);
-				return true;
-			}
-			if (sender instanceof Player && !WalkerEngine.get().getGruposManager().isSuperior(j, j2)) {
-				MensagensAPI.mensagemErro("Você só pode definir grupos inferiores ao seu",sender);
-				return true;
-			}
-			WalkerEngine.get().getStaffManager().setStaff(j2, WalkerEngine.get().getServerType(), gp, j);
-			return true;*/
 		}
 		return false;
 	}
