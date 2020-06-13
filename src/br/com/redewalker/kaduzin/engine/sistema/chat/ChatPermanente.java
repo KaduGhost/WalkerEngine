@@ -10,7 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.apis.MensagensAPI;
 import br.com.redewalker.kaduzin.engine.apis.VanishAPI;
-import br.com.redewalker.kaduzin.engine.sistema.chat.bungee.WalkerChatBungee;
+import br.com.redewalker.kaduzin.engine.bungee.WalkerBungee;
 import br.com.redewalker.kaduzin.engine.sistema.tag.Tag;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
 
@@ -149,7 +149,7 @@ public class ChatPermanente implements Canal {
 		boolean prox = false;
 		boolean prox1 = false;
 		if (isIgnorando(j)) removeIgnorar(j);
-		if (isBungee()) WalkerChatBungee.sendBungee(this, ChatUtils.formatarMensagem(this, j, message, j));
+		if (isBungee()) WalkerBungee.sendBungeeChat(this, ChatUtils.formatarMensagem(this, j, message, j));
 		else {
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				Usuario j2 = WalkerEngine.get().getUsuarioManager().getUsuario(p.getName());

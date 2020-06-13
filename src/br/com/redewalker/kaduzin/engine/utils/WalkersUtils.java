@@ -34,6 +34,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.apis.MensagensAPI;
+import br.com.redewalker.kaduzin.engine.sistema.punicoes.Punicao;
+import br.com.redewalker.kaduzin.engine.sistema.punicoes.PunicoesType;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
 
 public class WalkersUtils {
@@ -364,6 +366,158 @@ public class WalkersUtils {
 				return null;
 			}
 		}
+		
+		public static ItemStack getItemPunicao(String tipo, String j, Punicao punicao) {
+			ArrayList<String> loree;
+			switch (tipo) {
+			case "kickarjogador":
+				return new ItemBuilder(Material.DIAMOND_BOOTS).setName("§eKickar").fazer();
+			case "despunirban":
+				return new ItemBuilder(101).setName("§cDespunir Banimento").setLore(Arrays.asList(" §7Clique para despunir o", "§7 jogador de um banimento ativo.")).fazer();
+			case "despunirmute":
+				return new ItemBuilder(Material.BARRIER).setName("§aDespunir Mute").setLore(Arrays.asList(" §7Clique para despunir o", "§7 jogador de um mute ativo.")).fazer();
+			case "punirjogador":
+				return new ItemBuilder(Material.BANNER,1).setName("§cPunir um Jogador").setLore(Arrays.asList("§7Clique para abrir", "§7o menu de punicões.")).fazer();
+			case "despunirjogador":
+				return new ItemBuilder(Material.BANNER,10).setName("§aDespunir um Jogador").setLore(Arrays.asList("§7Clique para abrir", "§7o menu.")).fazer();
+			case "listaavaliados":
+				loree = new ArrayList<>();
+				Usuario u = WalkerEngine.get().getUsuarioManager().getUsuario(j);
+				if (u instanceof Usuario && u.hasPermission("walker.punir.admin")) loree.addAll(Arrays.asList(" §7Clique para ver as punições", " §7que precisam ser avaliadas."));
+				else loree.addAll(Arrays.asList(" §7Clique para ver suas punições", " §7que estão sendo avaliadas."));
+				return new ItemBuilder(Material.SIGN).setName("§eAvaliações").setLore(loree).fazer();
+			case "listabanidos":
+				return new ItemBuilder(101).setName("§eLista de Banimentos ativos").setLore(Arrays.asList(" §7Clique para ver a lista de", " §7banimentos ativos no servidor.")).fazer();
+			case "listamutados":
+				return new ItemBuilder(Material.BARRIER).setName("§eLista de Mutes ativos").setLore(Arrays.asList(" §7Clique para ver a lista de", " §7mutes ativos no servidor.")).fazer();
+			case "historicobanidos":
+				return new ItemBuilder(Material.BOOK_AND_QUILL).setName("§eHistorico de Banimentos").setLore(Arrays.asList(" §7Clique para ver o historico", " §7de banimentos do servidor.")).fazer();
+			case "historicomutados":
+				return new ItemBuilder(Material.BOOK_AND_QUILL).setName("§eHistorico de Mutes").setLore(Arrays.asList(" §7Clique para ver o historico", " §7de mutes do servidor.")).fazer();
+			case "historicokicks":
+				return new ItemBuilder(Material.BOOK_AND_QUILL).setName("§eHistorico de Kicks").setLore(Arrays.asList(" §7Clique para ver o historico", " §7de kicks do servidor.")).fazer();
+			case "configs":
+				return new ItemBuilder(Material.ANVIL).setName("§eConfigurações").setLore(Arrays.asList(" §7Clique para ver e editar as", " §7configurações de banimentos.")).fazer();
+			case "listameusbanidos":
+				return new ItemBuilder(Material.BOOK_AND_QUILL).setName("§eMeus Banimentos").setLore(Arrays.asList(" §7Clique para ver a lista de", " §7banimentos em que você é o autor.")).fazer();
+			case "listameusmutados":
+				return new ItemBuilder(Material.BOOK_AND_QUILL).setName("§eMeus Mutes").setLore(Arrays.asList(" §7Clique para ver a lista de", " §7mutes em que você é o autor.")).fazer();
+			case "cabecamotivo":
+				loree = new ArrayList<>();
+				loree = new ArrayList<>();
+				loree.addAll(Arrays.asList(" §7Escolha um motivo por qual", " §7quer punir este jogador."));
+				ItemStack cabeca = new ItemStack(Material.SKULL_ITEM, 1, (short)SkullType.PLAYER.ordinal());
+				SkullMeta mt = (SkullMeta)cabeca.getItemMeta();
+				mt.setDisplayName("§cPunir " + j);
+				mt.setOwner(j);
+				mt.setLore(loree);
+				cabeca.setItemMeta(mt);
+		    	return cabeca;
+			case "cabecadespunir":
+				loree = new ArrayList<>();
+				loree = new ArrayList<>();
+				loree.addAll(Arrays.asList(" §7Escolha um tipo de punição", " §7para despunir este jogador."));
+				cabeca = new ItemStack(Material.SKULL_ITEM, 1, (short)SkullType.PLAYER.ordinal());
+				mt = (SkullMeta)cabeca.getItemMeta();
+				mt.setDisplayName("§aDespunir " + j);
+				mt.setOwner(j);
+				mt.setLore(loree);
+				cabeca.setItemMeta(mt);
+		    	return cabeca;
+			case "punicaoativa":
+				ArrayList<String> lore = new ArrayList<String>();
+				loree = new ArrayList<>();
+				u = WalkerEngine.get().getUsuarioManager().getUsuario(j);
+				lore.add(" §fID§7: " + punicao.getID());
+				lore.add(" §fPunido§7: "+punicao.getJogador());
+				lore.add(" §fData§7: "+formatedData(punicao.getData()).replace(" ", " ás "));
+				if (punicao.getAte() == 0) lore.add(" §fDuração§7: Eterno");
+				else lore.add(" §fDuração§7: "+formatedData(punicao.getAte()).replace(" ", " ás "));
+				if (punicao.getProva().equalsIgnoreCase("sem")) lore.add(" §fProva§7: Sem provas");
+				else lore.add(" §fProva§7: "+punicao.getProva());
+				lore.add(" §fMotivo§7: "+punicao.getComentario());
+				Usuario autor = WalkerEngine.get().getUsuarioManager().getUsuario(punicao.getAutor());
+				if (autor instanceof Usuario) lore.add(" §fAutor§7: "+WalkerEngine.get().getGruposManager().getGrupo(autor.getGrupoIn()).getTag().toString()+autor.getNickOriginal());
+				else lore.add(" §fAutor§7: "+punicao.getAutor());
+				if (punicao.isAvaliado()) {
+					lore.add(" §fAvaliação§7:");
+					String acc = "Não avaliado";
+					if (punicao.hasAvaliador() && !punicao.isAvaliacao()) acc = "§cNão aceito";
+					else if (punicao.hasAvaliador() && punicao.isAvaliacao()) acc = "§aAceito";
+					lore.add("  §fAvaliação§7: "+acc);
+					if (punicao.hasAvaliador()) lore.add("  §fAutor§7: "+punicao.getAvaliador());
+				}
+				lore.add("");
+				if (u.hasPermission("walker.punir.admin") || u.getNickOriginal().equalsIgnoreCase(punicao.getAutor())) lore.add(" §aClique direito para revogar a punição.");
+				return WalkersItens.getCabeca("§ePunição: §l"+punicao.getTipo().getDescricao(), lore, punicao.getJogador());
+			case "punicaohistorico":
+				lore = new ArrayList<String>();
+				lore.add(" §fID§7: " + punicao.getID());
+				lore.add(" §fPunido§7: "+punicao.getJogador());
+				lore.add(" §fData§7: "+formatedData(punicao.getData()).replace(" ", " ás "));
+				if (!punicao.getTipo().equals(PunicoesType.KICK)) {
+					if (punicao.getAte() == 0) lore.add(" §fDuração§7: Eterno");
+					else lore.add(" §fDuração§7: "+WalkersUtils.formatedData(punicao.getAte()).replace(" ", " ás "));
+				}
+				if (punicao.getProva().equalsIgnoreCase("sem")) lore.add(" §fProva§7: Sem provas");
+				else lore.add(" §fProva§7: "+punicao.getProva());
+				lore.add(" §fMotivo§7: "+punicao.getComentario());
+				autor = WalkerEngine.get().getUsuarioManager().getUsuario(punicao.getAutor());
+				if (autor instanceof Usuario) lore.add(" §fAutor§7: "+WalkerEngine.get().getGruposManager().getGrupo(autor.getGrupoIn()).getTag().toString()+autor.getNickOriginal());
+				else lore.add(" §fAutor§7: "+punicao.getAutor());
+				if (!punicao.getTipo().equals(PunicoesType.KICK)) {
+					lore.add(" §fAtivo§7: "+punicao.isAtivo());
+					Usuario revog = WalkerEngine.get().getUsuarioManager().getUsuario(punicao.getDespunidor());
+					if (punicao.hasDespunidor() && revog instanceof Usuario) lore.add(" §fRevogado por: §f"+WalkerEngine.get().getGruposManager().getGrupo(revog.getGrupoIn()).getTag().toString()+revog.getNickOriginal());
+					else if (punicao.hasDespunidor() && !(revog instanceof Usuario)) lore.add(" §fRevogado por: §f"+punicao.getDespunidor());
+				}
+				if (punicao.isAvaliado()) {
+					lore.add(" §fAvaliação§7:");
+					String acc = "Não avaliado";
+					if (punicao.hasAvaliador() && !punicao.isAvaliacao()) acc = "§cNão aceito";
+					else if (punicao.hasAvaliador() && punicao.isAvaliacao()) acc = "§aAceito";
+					lore.add("  §fAvaliação§7: "+acc);
+					if (punicao.hasAvaliador()) lore.add("  §fAutor§7: "+punicao.getAvaliador());
+				}
+				lore.add("");
+				return WalkersItens.getCabeca("§ePunição: §l"+punicao.getTipo().getDescricao(), lore, punicao.getJogador());
+			case "punicaomeuhistorico":
+				lore = new ArrayList<String>();
+				lore.add(" §fID§7: " + punicao.getID());
+				lore.add(" §fPunido§7: "+punicao.getJogador());
+				lore.add(" §fData§7: "+formatedData(punicao.getData()).replace(" ", " ás "));
+				if (!punicao.getTipo().equals(PunicoesType.KICK)) {
+					if (punicao.getAte() == 0) lore.add(" §fDuração§7: Eterno");
+					else lore.add(" §fDuração§7: "+WalkersUtils.formatedData(punicao.getAte()).replace(" ", " ás "));
+				}
+				if (punicao.getProva().equalsIgnoreCase("sem")) lore.add(" §fProva§7: Sem provas");
+				else lore.add(" §fProva§7: "+punicao.getProva());
+				lore.add(" §fMotivo§7: "+punicao.getComentario());
+				autor = WalkerEngine.get().getUsuarioManager().getUsuario(punicao.getAutor());
+				if (autor instanceof Usuario) lore.add(" §fAutor§7: "+WalkerEngine.get().getGruposManager().getGrupo(autor.getGrupoIn()).getTag().toString()+autor.getNickOriginal());
+				else lore.add(" §fAutor§7: "+punicao.getAutor());
+				if (!punicao.getTipo().equals(PunicoesType.KICK)) {
+					lore.add(" §fAtivo§7: "+punicao.isAtivo());
+					Usuario revog = WalkerEngine.get().getUsuarioManager().getUsuario(punicao.getDespunidor());
+					if (punicao.hasDespunidor() && revog instanceof Usuario) lore.add(" §fRevogado por: §f"+WalkerEngine.get().getGruposManager().getGrupo(revog.getGrupoIn()).getTag().toString()+revog.getNickOriginal());
+					else if (punicao.hasDespunidor() && !(revog instanceof Usuario)) lore.add(" §fRevogado por: §f"+punicao.getDespunidor());
+				}
+				if (punicao.isAvaliado()) {
+					lore.add(" §fAvaliação§7:");
+					String acc = "Não avaliado";
+					if (punicao.hasAvaliador() && !punicao.isAvaliacao()) acc = "§cNão aceito";
+					else if (punicao.hasAvaliador() && punicao.isAvaliacao()) acc = "§aAceito";
+					lore.add("  §fAvaliação§7: "+acc);
+					if (punicao.hasAvaliador()) lore.add("  §fAutor§7: "+punicao.getAvaliador());
+				}
+				lore.add("");
+				if (punicao.isAtivo()) lore.add(" §aClique direito para revogar a punição.");
+				return WalkersItens.getCabeca("§ePunição: §l"+punicao.getTipo().getDescricao(), lore, punicao.getJogador());
+			default:
+				return null;
+			}
+		}
+		
 		
 	}
 	

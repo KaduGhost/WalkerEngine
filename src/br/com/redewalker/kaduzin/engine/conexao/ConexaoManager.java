@@ -9,6 +9,7 @@ public class ConexaoManager {
 	private ConexaoUsuarioDAO usuario;
 	private ConexaoGrupoDAO grupo;
 	private ConexaoStaffDAO staff;
+	private ConexaoPunicoesDAO punicoes;
 	
 	public ConexaoManager(Config config) {
 		this.api = new ConexaoAPI(config);
@@ -16,6 +17,11 @@ public class ConexaoManager {
 		this.usuario = new ConexaoUsuarioDAO("engine_usuario", "nick");
 		this.grupo = new ConexaoGrupoDAO("engine_grupo", "nick");
 		this.staff = new ConexaoStaffDAO("engine_staff", "id");
+		this.punicoes = new ConexaoPunicoesDAO("engine_punicoes", "id");
+	}
+	
+	public ConexaoPunicoesDAO getConexaoPunicoesDAO() {
+		return punicoes;
 	}
 	
 	public ConexaoStaffDAO getStaffConnection() {

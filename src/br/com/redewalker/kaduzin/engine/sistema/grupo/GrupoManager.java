@@ -162,6 +162,8 @@ public class GrupoManager {
 				grupos.get(gp).setNome("Ajudante");
 				grupos.get(gp).setTag(new Tag("[Ajudante]", "§e"));
 				grupos.get(gp).addHeranca(GrupoType.Staff);
+				grupos.get(gp).addPermission("walker.punir");
+				grupos.get(gp).addPermission("walker.punicao.tempmute");
 				break;
 			case Moderador:
 				grupos.get(gp).setNome("Moderador");
@@ -180,6 +182,10 @@ public class GrupoManager {
 				grupos.get(gp).addPermission("god.use");
 				grupos.get(gp).addPermission("speed.usar");
 				grupos.get(gp).addPermission("tp.usar");
+				grupos.get(gp).addPermission("walker.punicao.kick");
+				grupos.get(gp).addPermission("walker.punicao.mute");
+				grupos.get(gp).addPermission("walker.punicao.ban");
+				grupos.get(gp).addPermission("walker.punicao.tempban");
 				break;
 			case Administrador:
 				grupos.get(gp).setNome("Administrador");
@@ -209,6 +215,8 @@ public class GrupoManager {
 				grupos.get(gp).addPermission("tphere.usar");
 				grupos.get(gp).addPermission("walker.chattag.cash");
 				grupos.get(gp).addPermission("walker.staff.setar");
+				grupos.get(gp).addPermission("walker.punicao.ipban");
+				grupos.get(gp).addPermission("walker.punicao.tempipban");
 				break;
 			case Gerente:
 				grupos.get(gp).setNome("Gerente");
@@ -219,6 +227,7 @@ public class GrupoManager {
 				grupos.get(gp).addPermission("walker.matar.bypass");
 				grupos.get(gp).addPermission("walker.tell.bypass");
 				grupos.get(gp).addPermission("walker.staff.setar.gerente");
+				grupos.get(gp).addPermission("walker.punir.avaliador");
 				break;
 			case Master:
 				grupos.get(gp).setNome("Master");

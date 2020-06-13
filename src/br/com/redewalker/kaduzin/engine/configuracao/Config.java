@@ -61,7 +61,17 @@ public class Config extends Configuration {
 		if (!get().contains("Limite-Jogadores")) get().set("Limite-Jogadores", 20);
 		if (!get().contains("Expulsar-sem-vip")) get().set("Expulsar-sem-vip", true);
 		if (!get().contains("Tempo-para-expulsar")) get().set("Tempo-para-expulsar", 60);
+		if (!get().contains("protection.antiip.regex-ip")) get().set("protection.antiip.regex-ip", "(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])");
+		if (!get().contains("protection.antiip.regex-url")) get().set("protection.antiip.regex-url", "((http:\\/\\/|https:\\/\\/)?(www.)?(([a-zA-Z0-9-]){2,}\\.){1,4}([a-zA-Z]){2,6}(\\/([a-zA-Z-_\\/\\.0-9#:?=&;,]*)?)?)");
 		save();
+	}
+	
+	public String getAntiIPRegexIP() {
+		return get().getString("protection.antiip.regex-ip");
+	}
+	
+	public String getAntiIPRegexURL() {
+		return get().getString("protection.antiip.regex-url");
 	}
 	
 	public String getServerNome() {

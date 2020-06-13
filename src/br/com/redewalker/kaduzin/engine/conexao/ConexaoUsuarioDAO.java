@@ -22,15 +22,15 @@ public class ConexaoUsuarioDAO extends Conexao {
 			st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("select * from "+getNome());
 			ResultSet rs =st.executeQuery();
 			if (!WalkerEngine.get().getConexaoManager().getConexaoAPI().hasColumn(rs, "logado")) {
-				st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("ALTER TABLE `"+getNome()+"` ADD `logado` tinyint AFTER `cash`");
+				st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("ALTER TABLE `"+getNome()+"` ADD `logado` tinyint default 0 AFTER `cash`");
 				st.executeUpdate();
 			}
 			if (!WalkerEngine.get().getConexaoManager().getConexaoAPI().hasColumn(rs, "vanish")) {
-				st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("ALTER TABLE `"+getNome()+"` ADD `vanish` tinyint AFTER `logado`");
+				st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("ALTER TABLE `"+getNome()+"` ADD `vanish` tinyint default 0 AFTER `logado`");
 				st.executeUpdate();
 			}
 			if (!WalkerEngine.get().getConexaoManager().getConexaoAPI().hasColumn(rs, "online")) {
-				st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("ALTER TABLE `"+getNome()+"` ADD `online` tinyint AFTER `logado`");
+				st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("ALTER TABLE `"+getNome()+"` ADD `online` tinyint default 0 AFTER `logado`");
 				st.executeUpdate();
 			}
 			if (!WalkerEngine.get().getConexaoManager().getConexaoAPI().hasColumn(rs, "chatfocus")) {
@@ -38,7 +38,11 @@ public class ConexaoUsuarioDAO extends Conexao {
 				st.executeUpdate();
 			}
 			if (!WalkerEngine.get().getConexaoManager().getConexaoAPI().hasColumn(rs, "tell")) {
-				st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("ALTER TABLE `"+getNome()+"` ADD `tell` tinyint AFTER `chatfocus`");
+				st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("ALTER TABLE `"+getNome()+"` ADD `tell` tinyint default 1 AFTER `chatfocus`");
+				st.executeUpdate();
+			}
+			if (!WalkerEngine.get().getConexaoManager().getConexaoAPI().hasColumn(rs, "msgban")) {
+				st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("ALTER TABLE `"+getNome()+"` ADD `msgban` tinyint default 1 AFTER `tell`");
 				st.executeUpdate();
 			}
 		} catch (SQLException e) {

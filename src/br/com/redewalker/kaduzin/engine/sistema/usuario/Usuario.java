@@ -70,6 +70,14 @@ public class Usuario {
 		return nickOriginal;
 	}
 	
+	public void setVerMsgPunicao(boolean set) {
+		WalkerEngine.get().getConexaoManager().getUsuarioConnection().setBoolean(nickOriginal, "msgban", set);
+	}
+	
+	public boolean isVerMsgPunicao() {
+		return WalkerEngine.get().getConexaoManager().getUsuarioConnection().getBoolean(nickOriginal, "msgban");
+	}
+	
 	public void setLogado(boolean set) {
 		WalkerEngine.get().getConexaoManager().getUsuarioConnection().setBoolean(nickOriginal, "logado", set);
 	}

@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.comphenix.protocol.ProtocolLibrary;
 
+import br.com.redewalker.kaduzin.engine.bungee.WalkerBungee;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoBroadcast;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoCash;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoCmdBlock;
@@ -18,6 +19,7 @@ import br.com.redewalker.kaduzin.engine.comandos.ComandoGrupo;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoHat;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoLimparChat;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoMatar;
+import br.com.redewalker.kaduzin.engine.comandos.ComandoPunir;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoR;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoSkull;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoSpeed;
@@ -30,13 +32,14 @@ import br.com.redewalker.kaduzin.engine.comandos.ComandoVanish;
 import br.com.redewalker.kaduzin.engine.conexao.ConexaoManager;
 import br.com.redewalker.kaduzin.engine.configuracao.ConfigManager;
 import br.com.redewalker.kaduzin.engine.listeners.ComandosListeners;
+import br.com.redewalker.kaduzin.engine.listeners.PunicoesListeners;
 import br.com.redewalker.kaduzin.engine.listeners.UsuarioListeners;
 import br.com.redewalker.kaduzin.engine.sistema.chat.ChatManager;
-import br.com.redewalker.kaduzin.engine.sistema.chat.bungee.WalkerChatBungee;
 import br.com.redewalker.kaduzin.engine.sistema.comando.ComandosManager;
 import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoManager;
 import br.com.redewalker.kaduzin.engine.sistema.placeholder.PlaceHookWalkers;
 import br.com.redewalker.kaduzin.engine.sistema.placeholder.PlaceholderAPI;
+import br.com.redewalker.kaduzin.engine.sistema.punicoes.PunicoesManager;
 import br.com.redewalker.kaduzin.engine.sistema.server.Servers;
 import br.com.redewalker.kaduzin.engine.sistema.staff.StaffManager;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.UsuarioManager;
@@ -55,6 +58,7 @@ public class WalkerEngine extends JavaPlugin {
 	private PlaceholderAPI placeholder;
 	private ComandosManager comandosManager;
 	private VanishManager vanishManager;
+	private PunicoesManager punicoesManager;
 	//private VoarManager voarManager;
 	private boolean isUseProtocolLib;
 	private String tag;
@@ -79,6 +83,7 @@ public class WalkerEngine extends JavaPlugin {
 		chatManager = new ChatManager(getConfigManager().getConfigChat());
 		comandosManager = new ComandosManager(getConfigManager().getConfigComando());
 		vanishManager = new VanishManager();
+		punicoesManager = new PunicoesManager(getConfigManager().getConfigPrincipal());
 //		voarManager = new VoarManager(getConfigManager().getConfigPrincipal());
 		placeholder = new PlaceholderAPI();
 		if (!checkHooks()) {
@@ -91,8 +96,11 @@ public class WalkerEngine extends JavaPlugin {
 		registrarEventos();
 		registrarComandos();
 		
-		getServer().getMessenger().registerOutgoingPluginChannel(this, "bungee:walkerchat");
-        getServer().getMessenger().registerIncomingPluginChannel(this, "bungee:walkerchat", new WalkerChatBungee());
+		getServer().getMessenger().registerOutgoingPluginChannel(this, "bungee:walkerengine");
+        getServer().getMessenger().registerIncomingPluginChannel(this, "bungee:walkerengine", new WalkerBungee());
+        
+        //getServer().getMessenger().registerOutgoingPluginChannel(this, "bungee:walkerpunicoes");
+        //getServer().getMessenger().registerIncomingPluginChannel(this, "bungee:walkerpunicoes", new WalkerPunicaoBungee());
         
 		console.sendMessage("§a"+tag+" Plugin iniciado com sucesso!");
 		new BukkitRunnable() {
@@ -131,6 +139,10 @@ public class WalkerEngine extends JavaPlugin {
 //	public VoarManager getVoarManager() {
 //		return voarManager;
 //	}
+	
+	public PunicoesManager getPunicoesManager() {
+		return punicoesManager;
+	}
 	
 	public FileConfiguration getConfig() {
 		return config.getConfigPrincipal().get();
@@ -179,6 +191,7 @@ public class WalkerEngine extends JavaPlugin {
 	public void registrarEventos() {
 		Bukkit.getServer().getPluginManager().registerEvents(new UsuarioListeners(), this);
 		Bukkit.getServer().getPluginManager().registerEvents(new ComandosListeners(), this);
+		Bukkit.getServer().getPluginManager().registerEvents(new PunicoesListeners(), this);
 	}
 	
 	public void registrarComandos() {
@@ -194,6 +207,7 @@ public class WalkerEngine extends JavaPlugin {
 		comandosManager.registrarComando(new ComandoTell("tell"), "walker.membro", 0);
 		comandosManager.registrarComando(new ComandoR("r"), "walker.membro", 0);
 		comandosManager.registrarComando(new ComandoCmdBlock("cmdblock"), "walker.cmdblock", 0);
+		comandosManager.registrarComando(new ComandoPunir("punir"), "walker.punir", 0);
 		//comandosManager.registrarComando(new ComandoPunir("punir"), "punir", 0);
 		//comandosManager.registrarComando(new ComandoMotd("motd"), "motd", 0);
 		//comandosManager.registrarComando(new ComandoManutencao("manutencao"), "manutencao.admin", 0);
