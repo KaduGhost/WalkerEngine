@@ -186,6 +186,7 @@ public class GrupoManager {
 				grupos.get(gp).addPermission("walker.punicao.mute");
 				grupos.get(gp).addPermission("walker.punicao.ban");
 				grupos.get(gp).addPermission("walker.punicao.tempban");
+				grupos.get(gp).addPermission("walker.reports");
 				break;
 			case Administrador:
 				grupos.get(gp).setNome("Administrador");

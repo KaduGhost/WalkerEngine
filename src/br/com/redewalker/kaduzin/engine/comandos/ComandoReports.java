@@ -4,13 +4,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
-import com.walkersmc.api.WalkersAPI;
-import com.walkersmc.api.apis.JogadoresAPI;
-import com.walkersmc.api.apis.MensagensAPI;
-import com.walkersmc.api.sistemas.grupos.GrupoType;
-import com.walkersmc.api.sistemas.jogador.Jogador;
-import com.walkersmc.api.sistemas.reports.ReportManager;
-import com.walkersmc.api.sistemas.reports.inventarios.InventarioReportType;
+import br.com.redewalker.kaduzin.engine.WalkerEngine;
+import br.com.redewalker.kaduzin.engine.apis.MensagensAPI;
+import br.com.redewalker.kaduzin.engine.sistema.reports.ReportManager;
+import br.com.redewalker.kaduzin.engine.sistema.reports.inventarios.InventarioReportType;
+import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
 
 public class ComandoReports extends BukkitCommand {
 
@@ -20,19 +18,19 @@ public class ComandoReports extends BukkitCommand {
 
 	@Override
 	public boolean execute(CommandSender sender, String arg1, String[] args) {
-		ReportManager manager = WalkersAPI.get().getReportManager();
+		ReportManager manager = WalkerEngine.get().getReportManager();
 		if (!(sender instanceof Player)) {
 			MensagensAPI.apenasJogadores(sender);
 			return false;
 		}
-		Jogador j = JogadoresAPI.getJogador(sender.getName());
+		Usuario j = WalkerEngine.get().getUsuarioManager().getUsuario(sender.getName());
 		if (!j.hasPermission("walker.reports")) {
-			MensagensAPI.semPermissaoComando(GrupoType.Moderador, sender);
+			MensagensAPI.semPermissaoComando(sender);
 			return false;
 		}
 		if (args.length == 0) {
-			if (manager.isAnalisando(j)) manager.abrirInventario(j.getPlayer(), InventarioReportType.AVALIACAO, 1, null);
-			else manager.abrirInventario(j.getPlayer(), InventarioReportType.MENU, 1, j);
+			if (manager.isAnalisando(j.getNickOriginal())) manager.abrirInventario(j.getPlayer(), InventarioReportType.AVALIACAO, 1, null);
+			else manager.abrirInventario(j.getPlayer(), InventarioReportType.MENU, 1, j.getNickOriginal());
 			return true;
 		}
 		MensagensAPI.formatoIncorreto("reports", sender);

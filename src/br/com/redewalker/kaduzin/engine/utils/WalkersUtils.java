@@ -36,6 +36,8 @@ import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.apis.MensagensAPI;
 import br.com.redewalker.kaduzin.engine.sistema.punicoes.Punicao;
 import br.com.redewalker.kaduzin.engine.sistema.punicoes.PunicoesType;
+import br.com.redewalker.kaduzin.engine.sistema.reports.ReportMotivoType;
+import br.com.redewalker.kaduzin.engine.sistema.reports.ReportPerfil;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
 
 public class WalkersUtils {
@@ -518,6 +520,42 @@ public class WalkersUtils {
 			}
 		}
 		
+		public static ItemStack getItemReports(String tipo, ReportPerfil perfil, String esconde) {
+			switch (tipo) {
+			case "cabecareports":
+				ArrayList<String> loree = new ArrayList<>();
+				loree.addAll(Arrays.asList(" §7Clique para ver os reports", " §7ativos no servidor."));
+				ItemStack cabeca = new ItemStack(Material.SKULL_ITEM, 1, (short)SkullType.PLAYER.ordinal());
+				SkullMeta mt = (SkullMeta)cabeca.getItemMeta();
+				mt.setDisplayName("§eReports Ativos");
+				mt.setLore(loree);
+				cabeca.setItemMeta(mt);
+		    	return cabeca;
+			case "emanalise":
+				return new ItemBuilder(Material.EYE_OF_ENDER).setName("§eReports em Análise").setLore(Arrays.asList(" §7Clique para ver os jogadores que", " §7estão sendo analisados e quem está analisando.")).fazer();
+			case "cabecaavaliar":
+				ArrayList<String> lore = new ArrayList<String>();
+				lore.add("");
+				for (ReportMotivoType tipo1 : EnumSet.allOf(ReportMotivoType.class)) {
+					int quant = perfil.getQuantidadeReportsByType(tipo1);
+					if (quant != 0) lore.add(" §e• §f"+WalkerEngine.get().getReportManager().getReportMotivo(tipo1).getNome()+"§7: "+perfil.getQuantidadeReportsByType(tipo1));
+				}
+				lore.add("");
+				lore.add(" §fTotal§7: "+perfil.getQuantidadeReports());
+				return WalkersItens.getCabeca(perfil.getJogador(),lore, perfil.getJogador());
+			case "teleportaraojogador":
+				return new ItemBuilder(Material.ENDER_PEARL).setName("§eTeleportar ao jogador").setLore(Arrays.asList(" §7Clique para ser teleportado ao", " §7jogador em modo vanish.")).fazer();
+			case "finalizaravaliacao":
+				return new ItemBuilder(Material.BANNER,10).setName("§aFinalizar avaliação").setLore(Arrays.asList(" §7Após finalizar, se necessário, utilize §e§l/punir", " §7para aplicar a punição ao jogador.")).fazer();
+			case "cancelaravaliacao":
+				return new ItemBuilder(Material.BANNER,1).setName("§cCancelar avaliação").setLore(Arrays.asList(" §7Clique aqui para cancelar a operação.")).fazer();
+			case "analisar":
+				return new ItemBuilder(Material.BANNER,10).setName("§aAnalisar Jogador").setLore(Arrays.asList(EsconderStringUtils.esconderString(esconde))).fazer();
+			default:
+				return null;
+			}
+		}
+
 		
 	}
 	

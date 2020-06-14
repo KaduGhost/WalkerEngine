@@ -21,6 +21,8 @@ import br.com.redewalker.kaduzin.engine.comandos.ComandoLimparChat;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoMatar;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoPunir;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoR;
+import br.com.redewalker.kaduzin.engine.comandos.ComandoReport;
+import br.com.redewalker.kaduzin.engine.comandos.ComandoReports;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoSkull;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoSpeed;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoStaff;
@@ -33,6 +35,7 @@ import br.com.redewalker.kaduzin.engine.conexao.ConexaoManager;
 import br.com.redewalker.kaduzin.engine.configuracao.ConfigManager;
 import br.com.redewalker.kaduzin.engine.listeners.ComandosListeners;
 import br.com.redewalker.kaduzin.engine.listeners.PunicoesListeners;
+import br.com.redewalker.kaduzin.engine.listeners.ReportsListeners;
 import br.com.redewalker.kaduzin.engine.listeners.UsuarioListeners;
 import br.com.redewalker.kaduzin.engine.sistema.chat.ChatManager;
 import br.com.redewalker.kaduzin.engine.sistema.comando.ComandosManager;
@@ -40,6 +43,7 @@ import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoManager;
 import br.com.redewalker.kaduzin.engine.sistema.placeholder.PlaceHookWalkers;
 import br.com.redewalker.kaduzin.engine.sistema.placeholder.PlaceholderAPI;
 import br.com.redewalker.kaduzin.engine.sistema.punicoes.PunicoesManager;
+import br.com.redewalker.kaduzin.engine.sistema.reports.ReportManager;
 import br.com.redewalker.kaduzin.engine.sistema.server.Servers;
 import br.com.redewalker.kaduzin.engine.sistema.staff.StaffManager;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.UsuarioManager;
@@ -59,6 +63,7 @@ public class WalkerEngine extends JavaPlugin {
 	private ComandosManager comandosManager;
 	private VanishManager vanishManager;
 	private PunicoesManager punicoesManager;
+	private ReportManager reportManager;
 	//private VoarManager voarManager;
 	private boolean isUseProtocolLib;
 	private String tag;
@@ -84,6 +89,7 @@ public class WalkerEngine extends JavaPlugin {
 		comandosManager = new ComandosManager(getConfigManager().getConfigComando());
 		vanishManager = new VanishManager();
 		punicoesManager = new PunicoesManager(getConfigManager().getConfigPrincipal());
+		reportManager = new ReportManager();
 //		voarManager = new VoarManager(getConfigManager().getConfigPrincipal());
 		placeholder = new PlaceholderAPI();
 		if (!checkHooks()) {
@@ -140,6 +146,10 @@ public class WalkerEngine extends JavaPlugin {
 //		return voarManager;
 //	}
 	
+	public ReportManager getReportManager() {
+		return reportManager;
+	}
+	
 	public PunicoesManager getPunicoesManager() {
 		return punicoesManager;
 	}
@@ -192,6 +202,7 @@ public class WalkerEngine extends JavaPlugin {
 		Bukkit.getServer().getPluginManager().registerEvents(new UsuarioListeners(), this);
 		Bukkit.getServer().getPluginManager().registerEvents(new ComandosListeners(), this);
 		Bukkit.getServer().getPluginManager().registerEvents(new PunicoesListeners(), this);
+		Bukkit.getServer().getPluginManager().registerEvents(new ReportsListeners(), this);
 	}
 	
 	public void registrarComandos() {
@@ -211,8 +222,8 @@ public class WalkerEngine extends JavaPlugin {
 		//comandosManager.registrarComando(new ComandoPunir("punir"), "punir", 0);
 		//comandosManager.registrarComando(new ComandoMotd("motd"), "motd", 0);
 		//comandosManager.registrarComando(new ComandoManutencao("manutencao"), "manutencao.admin", 0);
-		//comandosManager.registrarComando(new ComandoReports("reports"), "reports", 0);
-		//comandosManager.registrarComando(new ComandoReport("reportar"), "membro", 30);
+		comandosManager.registrarComando(new ComandoReports("reports"), "walker.reports", 0);
+		comandosManager.registrarComando(new ComandoReport("reportar"), "walker.membro", 30);
 		comandosManager.registrarComando(new ComandoVanish("vanish"), "walker.vanish", 30);
 		//comandosManager.registrarComando(new ComandoEditItem("edititem"), "edititem", 0);
 		//comandosManager.registrarComando(new ComandoVoar("voar"), "voar", 0);

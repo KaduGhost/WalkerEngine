@@ -10,6 +10,9 @@ import org.bukkit.entity.Player;
 
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.apis.MensagensAPI;
+import br.com.redewalker.kaduzin.engine.sistema.reports.ReportMotivo;
+import br.com.redewalker.kaduzin.engine.sistema.reports.ReportMotivoType;
+import br.com.redewalker.kaduzin.engine.sistema.reports.ReportPerfil;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
 import br.net.fabiozumbi12.MinEmojis.Fanciful.FancyMessage;
 
@@ -31,8 +34,8 @@ public class ComandoReport extends BukkitCommand {
 			return true;
 		}else if (args.length >= 3) {
 			ReportMotivoType tipo = ReportMotivoType.getByNome(args[1]);
-			Jogador j2 = JogadoresAPI.getJogador(args[0]);
-			if (!(j2 instanceof Jogador)) {
+			Usuario j2 = WalkerEngine.get().getUsuarioManager().getUsuario(args[0]);
+			if (!(j2 instanceof Usuario)) {
 				MensagensAPI.jogadorNaoEncontrado(sender);
 				return false;
 			}
@@ -52,12 +55,12 @@ public class ComandoReport extends BukkitCommand {
 			for (int i = 2; i < args.length; i++) {
 				comentario+=args[i]+" ";
 			}
-			ReportPerfil perfil = WalkersAPI.get().getReportManager().getReportPerfil(j2);
-			if (perfil instanceof ReportPerfil && perfil.containsReport(tipo, j)) {
+			ReportPerfil perfil = WalkerEngine.get().getReportManager().getReportPerfil(j2.getNickOriginal());
+			if (perfil instanceof ReportPerfil && perfil.containsReport(tipo, j.getNickOriginal())) {
 				MensagensAPI.mensagemErro("Você já reportou este jogador por este motivo", sender);
 				return false;
 			}
-			WalkersAPI.get().getReportManager().createReport(j, j2, tipo, comentario);
+			WalkerEngine.get().getReportManager().createReport(j.getNickOriginal(), j2.getNickOriginal(), tipo, comentario);
 			MensagensAPI.mensagemSucesso("Você reportou o jogador "+j2.getNickOriginal(), sender);
 			return true;
 		}
@@ -65,12 +68,12 @@ public class ComandoReport extends BukkitCommand {
 		return false;
 	}
 
-	private void enviarMensagem(Jogador j, String alvo) {
+	private void enviarMensagem(Usuario j, String alvo) {
 		Player p = j.getPlayer();
 		p.sendMessage("");
 		p.sendMessage("  §6Tipos de infração disponíveis:");
 		for (ReportMotivoType tipo : EnumSet.allOf(ReportMotivoType.class)) {
-			ReportMotivo motivo = WalkersAPI.get().getReportManager().getReportMotivo(tipo);
+			ReportMotivo motivo = WalkerEngine.get().getReportManager().getReportMotivo(tipo);
 			List<String> a = new ArrayList<String>();
 			a.add(" §e" + motivo.getNome());
 			a.add("");

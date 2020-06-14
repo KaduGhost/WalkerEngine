@@ -1,5 +1,6 @@
 package br.com.redewalker.kaduzin.engine.conexao;
 
+import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.configuracao.Config;
 
 public class ConexaoManager {
@@ -10,6 +11,7 @@ public class ConexaoManager {
 	private ConexaoGrupoDAO grupo;
 	private ConexaoStaffDAO staff;
 	private ConexaoPunicoesDAO punicoes;
+	private ConexaoReportDAO report;
 	
 	public ConexaoManager(Config config) {
 		this.api = new ConexaoAPI(config);
@@ -18,6 +20,11 @@ public class ConexaoManager {
 		this.grupo = new ConexaoGrupoDAO("engine_grupo", "nick");
 		this.staff = new ConexaoStaffDAO("engine_staff", "id");
 		this.punicoes = new ConexaoPunicoesDAO("engine_punicoes", "id");
+		this.report = new ConexaoReportDAO(WalkerEngine.get().getServerType().toString().toLowerCase()+"_reports", "id");
+	}
+	
+	public ConexaoReportDAO getConexaoReportDAO() {
+		return report;
 	}
 	
 	public ConexaoPunicoesDAO getConexaoPunicoesDAO() {
