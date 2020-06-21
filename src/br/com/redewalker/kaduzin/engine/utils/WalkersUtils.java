@@ -39,6 +39,7 @@ import br.com.redewalker.kaduzin.engine.sistema.punicoes.PunicoesType;
 import br.com.redewalker.kaduzin.engine.sistema.reports.ReportMotivoType;
 import br.com.redewalker.kaduzin.engine.sistema.reports.ReportPerfil;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
+import br.com.redewalker.kaduzin.engine.sistema.vip.VIP;
 
 public class WalkersUtils {
 	
@@ -250,6 +251,51 @@ public class WalkersUtils {
 		public static ItemStack getPaginaAtualEscondeID(Integer pagina, String str) {
 			ItemStack paginaatual = new ItemBuilder(Material.DIAMOND_SWORD).setName("§ePágina at§c§eual: §f" + pagina).setLore(Arrays.asList(EsconderStringUtils.esconderString(str))).addEnchantGlow(true).fazer();
 			return paginaatual;
+		}
+		
+		private static ArrayList<String> getLoreVIP(VIP vip) {
+			long tempo = vip.getTempoRestante();
+			long tempo1 = vip.getInicio();
+			ArrayList<String> lore = new ArrayList<>();
+			lore.add(" §7Tipo do VIP: "+ WalkerEngine.get().getGruposManager().getGrupo(vip.getTipo()).getTag().toString());
+			boolean ativo = vip.isAtivo();
+			if (vip.isExpirado()) lore.add(" §7Duração restante: §cExpirado");
+			else if (tempo == 0L) lore.add(" §7Duração restante: §aPermanente");
+			else if (ativo) {
+				tempo = (tempo - System.currentTimeMillis())/1000L;
+				lore.add(" §7Duração restante: §e"+WalkersUtils.getTempoRestante(vip.getInicio(), tempo));
+			}else if (!ativo) lore.add(" §7Duração restante: §e"+WalkersUtils.getTempoRestante(tempo));
+			if (ativo) lore.add(" §7Ativo: §fSim");
+			else lore.add(" §7Ativo: §fNão");
+			lore.add(" §7Conseguido através de " + vip.getRecebidoPor());
+			SimpleDateFormat fmt = new SimpleDateFormat("(dd/MM/yyyy) - HH:mm:ss");    
+			String str = fmt.format(tempo1);
+			lore.add(" §7Conseguido em "+str);
+			return lore;
+		}
+		
+		public static ItemStack getItemVIP(String tipo, VIP vip) {
+			switch (tipo) {
+			case "semvip":
+				return new ItemBuilder(Material.NAME_TAG).setName("§eSem VIPs").setLore(Arrays.asList(" §7Este jogador não tem"," §7VIP ativo, na fila ou permanente")).fazer();
+			case "vip":
+				ArrayList<String> lore = getLoreVIP(vip);
+				return new ItemBuilder(Material.NAME_TAG).setName(" §7ID: §f"+vip.getID()).setLore(lore).fazer();
+			case "vipr":
+				lore = getLoreVIP(vip);
+				lore.add(" §fDireito: §7para remover o VIP.");
+				return new ItemBuilder(Material.NAME_TAG).setName(" §7ID: §f"+vip.getID()).setLore(lore).fazer();
+			case "vipm":
+				lore = getLoreVIP(vip);
+				if (!vip.isAtivo()) lore.add(" §fDireito: §7para usar o VIP.");
+				return new ItemBuilder(Material.NAME_TAG).setName(" §7ID: §f"+vip.getID()).setLore(lore).fazer();
+			case "verstaffserver":
+				return new ItemBuilder(Material.EMERALD).setName("§eVer equipe do servidor").setLore(Arrays.asList(" §7Neste menu você pode ver", " §7e editar a staff do servidor.")).fazer();
+			case "verstaffrede":
+				return new ItemBuilder(Material.NETHER_STAR).setName("§eVer equipe da rede").setLore(Arrays.asList(" §7Neste menu você pode ver", " §7e editar a staff da rede.")).fazer();
+			default:
+				return null;
+			}
 		}
 		
 		public static ItemStack getItemStaff(String tipo, Usuario j) {

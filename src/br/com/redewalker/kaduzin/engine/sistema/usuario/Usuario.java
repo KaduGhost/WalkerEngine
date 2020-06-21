@@ -6,7 +6,10 @@ import org.bukkit.entity.Player;
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoType;
 import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoType.CargoType;
+import br.com.redewalker.kaduzin.engine.sistema.server.Servers;
+import br.com.redewalker.kaduzin.engine.sistema.server.Servers.ServerType;
 import br.com.redewalker.kaduzin.engine.sistema.staff.Staff;
+import br.com.redewalker.kaduzin.engine.sistema.vip.VIP;
 
 public class Usuario {
 	
@@ -34,10 +37,18 @@ public class Usuario {
 	
 	public void atualizarGrupo() {
 		boolean istaff = WalkerEngine.get().getStaffManager().isStaff(getNickOriginal());
-		if (!istaff && getGrupoIn().isStaff()) {
-			setGrupoIn(GrupoType.Membro); 
-			return;
-		}else if (istaff) {
+		boolean isvip = WalkerEngine.get().getVipManager().isVIP(this);
+		if (!isvip && getGrupoIn().isVIP()) setGrupoIn(GrupoType.Membro);
+		else if (isvip) {
+			VIP vip = WalkerEngine.get().getVipManager().getVIPAtivo(getNickOriginal(), WalkerEngine.get().getServerType());
+			if (vip != null) {
+				setGrupoIn(vip.getTipo());
+				return;
+			}
+			else if (vip == null && WalkerEngine.get().getServerType().getTipo().equals(ServerType.Lobby)) setGrupoIn(GrupoType.VIPLobby);
+		}
+		if (!istaff && getGrupoIn().isStaff()) setGrupoIn(GrupoType.Membro); 
+		else if (istaff) {
 			Staff s = WalkerEngine.get().getStaffManager().getStaffAtivoNoServer(this, WalkerEngine.get().getServerType());
 			if (s != null) setGrupoIn(s.getGrupo());
 			else setGrupoIn(GrupoType.Staff);
@@ -66,10 +77,6 @@ public class Usuario {
 		return GrupoType.getTipo(WalkerEngine.get().getConexaoManager().getUsuarioConnection().getString(nickOriginal, "grupoout"));
 	}
 	
-	public String getNome() {
-		return nickOriginal;
-	}
-	
 	public void setVerMsgPunicao(boolean set) {
 		WalkerEngine.get().getConexaoManager().getUsuarioConnection().setBoolean(nickOriginal, "msgban", set);
 	}
@@ -86,7 +93,19 @@ public class Usuario {
 		return WalkerEngine.get().getConexaoManager().getUsuarioConnection().getBoolean(nickOriginal, "logado");
 	}
 	
+	private void setOnlineInServer(String set) {
+		WalkerEngine.get().getConexaoManager().getUsuarioConnection().setString(nickOriginal, "onlineserver", set);
+	}
+	
+	public boolean isOnlineInServer() {
+		String s = WalkerEngine.get().getConexaoManager().getUsuarioConnection().getString(nickOriginal, "onlineserver");
+		if (!s.equalsIgnoreCase("nenhum") && Servers.getTipo(s) != null) return Servers.getTipo(s).equals(WalkerEngine.get().getServerType());
+		return false;
+	}
+	
 	public void setOnline(boolean set) {
+		if (!set) setOnlineInServer("nenhum");
+		else setOnlineInServer(WalkerEngine.get().getServerType().toString());
 		WalkerEngine.get().getConexaoManager().getUsuarioConnection().setBoolean(nickOriginal, "online", set);
 	}
 	

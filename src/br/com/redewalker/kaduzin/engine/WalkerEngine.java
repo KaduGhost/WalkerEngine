@@ -13,23 +13,29 @@ import br.com.redewalker.kaduzin.engine.comandos.ComandoBroadcast;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoCash;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoCmdBlock;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoCrashar;
+import br.com.redewalker.kaduzin.engine.comandos.ComandoDarVip;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoDivulgar;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoExecutarSom;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoGrupo;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoHat;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoLimparChat;
+import br.com.redewalker.kaduzin.engine.comandos.ComandoManutencao;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoMatar;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoPunir;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoR;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoReport;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoReports;
+import br.com.redewalker.kaduzin.engine.comandos.ComandoSetVip;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoSkull;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoSpeed;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoStaff;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoSudo;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoTell;
+import br.com.redewalker.kaduzin.engine.comandos.ComandoTempoVip;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoTimeSet;
+import br.com.redewalker.kaduzin.engine.comandos.ComandoTirarVip;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoTitle;
+import br.com.redewalker.kaduzin.engine.comandos.ComandoTrocarVip;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoVanish;
 import br.com.redewalker.kaduzin.engine.conexao.ConexaoManager;
 import br.com.redewalker.kaduzin.engine.configuracao.ConfigManager;
@@ -40,15 +46,18 @@ import br.com.redewalker.kaduzin.engine.listeners.UsuarioListeners;
 import br.com.redewalker.kaduzin.engine.sistema.chat.ChatManager;
 import br.com.redewalker.kaduzin.engine.sistema.comando.ComandosManager;
 import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoManager;
+import br.com.redewalker.kaduzin.engine.sistema.manutencao.ManutencaoManager;
 import br.com.redewalker.kaduzin.engine.sistema.placeholder.PlaceHookWalkers;
 import br.com.redewalker.kaduzin.engine.sistema.placeholder.PlaceholderAPI;
 import br.com.redewalker.kaduzin.engine.sistema.punicoes.PunicoesManager;
 import br.com.redewalker.kaduzin.engine.sistema.reports.ReportManager;
+import br.com.redewalker.kaduzin.engine.sistema.server.ServerManager;
 import br.com.redewalker.kaduzin.engine.sistema.server.Servers;
 import br.com.redewalker.kaduzin.engine.sistema.staff.StaffManager;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.UsuarioManager;
 import br.com.redewalker.kaduzin.engine.sistema.vanish.VanishManager;
 //import br.com.redewalker.kaduzin.engine.sistema.voar.VoarManager;
+import br.com.redewalker.kaduzin.engine.sistema.vip.VIPManager;
 
 public class WalkerEngine extends JavaPlugin {
 	
@@ -64,6 +73,9 @@ public class WalkerEngine extends JavaPlugin {
 	private VanishManager vanishManager;
 	private PunicoesManager punicoesManager;
 	private ReportManager reportManager;
+	private ManutencaoManager manutencao;
+	private ServerManager servers;
+	private VIPManager vip;
 	//private VoarManager voarManager;
 	private boolean isUseProtocolLib;
 	private String tag;
@@ -90,6 +102,9 @@ public class WalkerEngine extends JavaPlugin {
 		vanishManager = new VanishManager();
 		punicoesManager = new PunicoesManager(getConfigManager().getConfigPrincipal());
 		reportManager = new ReportManager();
+		servers = new ServerManager(server);
+		manutencao = new ManutencaoManager(config.getConfigPrincipal());
+		vip = new VIPManager();
 //		voarManager = new VoarManager(getConfigManager().getConfigPrincipal());
 		placeholder = new PlaceholderAPI();
 		if (!checkHooks()) {
@@ -145,6 +160,18 @@ public class WalkerEngine extends JavaPlugin {
 //	public VoarManager getVoarManager() {
 //		return voarManager;
 //	}
+	
+	public VIPManager getVipManager() {
+		return vip;
+	}
+	
+	public ServerManager getServerManager() {
+		return servers;
+	}
+	
+	public ManutencaoManager getManutencaoManager() {
+		return manutencao;
+	}
 	
 	public ReportManager getReportManager() {
 		return reportManager;
@@ -235,6 +262,12 @@ public class WalkerEngine extends JavaPlugin {
 		comandosManager.registrarComando(new ComandoSpeed("speed"), "walker.speed", 0);
 		comandosManager.registrarComando(new ComandoSudo("sudo"), "walker.sudo", 0);
 		comandosManager.registrarComando(new ComandoTitle("title"), "walker.title", 0);
+		comandosManager.registrarComando(new ComandoManutencao("manutencao"), "walker.manutencao.admin", 0);
+		comandosManager.registrarComando(new ComandoDarVip("darvip"), "walker.darvip", 0);
+		comandosManager.registrarComando(new ComandoSetVip("setvip"), "walker.setvip", 0);
+		comandosManager.registrarComando(new ComandoTirarVip("tirarvip"), "walker.tirarvip", 0);
+		comandosManager.registrarComando(new ComandoTrocarVip("trocarvip"), "walker.trocarvip", 0);
+		comandosManager.registrarComando(new ComandoTempoVip("tempovip"), "walker.tempovip", 0);
 	}
 
 }

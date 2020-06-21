@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -97,6 +98,10 @@ public class VanishManager implements Listener {
 	}
 	
 	@EventHandler
+	void antesEntrar(AsyncPlayerPreLoginEvent e) {
+	}
+	
+	@EventHandler
 	void aoMudardeMundo(PlayerChangedWorldEvent e) {
 		VanishControl.preventHider(e.getPlayer());
 		Usuario j = WalkerEngine.get().getUsuarioManager().getUsuario(e.getPlayer().getName());
@@ -105,7 +110,7 @@ public class VanishManager implements Listener {
 			else removeVanishado(j);
 		}
 		for (Usuario j2 : getJogadoresVanishados()) {
-			if (j2.isOnline()) VanishControl.preventHider(j2.getPlayer(), e.getPlayer());
+			if (j2.isOnline() && j2.isOnlineInServer()) VanishControl.preventHider(j2.getPlayer(), e.getPlayer());
 		}
 	}
 

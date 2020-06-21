@@ -157,6 +157,7 @@ public class GrupoManager {
 				grupos.get(gp).addPermission("walker.chat.bypass-spam");
 				grupos.get(gp).addPermission("walker.hat");
 				grupos.get(gp).addPermission("walker.tell.staff");
+				grupos.get(gp).addPermission("walker.manutencao.entrar");
 				break;
 			case Ajudante:
 				grupos.get(gp).setNome("Ajudante");
@@ -229,6 +230,7 @@ public class GrupoManager {
 				grupos.get(gp).addPermission("walker.tell.bypass");
 				grupos.get(gp).addPermission("walker.staff.setar.gerente");
 				grupos.get(gp).addPermission("walker.punir.avaliador");
+				grupos.get(gp).addPermission("walker.manutencao.admin");
 				break;
 			case Master:
 				grupos.get(gp).setNome("Master");

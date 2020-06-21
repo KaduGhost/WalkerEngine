@@ -19,6 +19,8 @@ import br.com.redewalker.kaduzin.engine.sistema.chat.Canal;
 import br.com.redewalker.kaduzin.engine.sistema.punicoes.Punicao;
 import br.com.redewalker.kaduzin.engine.sistema.punicoes.PunicoesType;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
+import br.com.redewalker.kaduzin.engine.sistema.vip.VIP;
+import br.com.redewalker.kaduzin.engine.utils.Title;
 import br.com.redewalker.kaduzin.engine.utils.WalkersUtils;
 import br.net.fabiozumbi12.MinEmojis.Fanciful.FancyMessage;
 
@@ -38,6 +40,8 @@ public class WalkerBungee implements PluginMessageListener, Listener {
         	}else if (sts.get(0).equals("punicoes")) {
         		sts.add(in.readUTF());
         		sts.add(in.readUTF());
+        		sts.add(in.readUTF());
+        	}else if (sts.get(0).equals("vip")) {
         		sts.add(in.readUTF());
         	}
         } catch (IOException e) {
@@ -69,6 +73,22 @@ public class WalkerBungee implements PluginMessageListener, Listener {
         			receiver.sendMessage(WalkerEngine.get().getPunicoesManager().getMsg(punicao));
         		}
             }
+        }else if (sts.get(0).equals("vip")) {
+        	VIP vip = WalkerEngine.get().getVipManager().getVIP(Long.parseLong(sts.get(2)));
+        	if (sts.get(1).equalsIgnoreCase(WalkerEngine.get().getServerType().toString())) new Title(WalkerEngine.get().getGruposManager().getGrupo(vip.getTipo()).getTag().toString().toUpperCase(), "§f"+vip.getUsuario().getNickOriginal()+" tornou-se VIP!").broadcast();
+        }
+    }
+	
+	public static void sendBungeeVip(String id, String server) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("vip");
+        out.writeUTF(server);
+        out.writeUTF(id);
+        Player p = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
+        try {
+            p.sendPluginMessage(WalkerEngine.get(), "bungee:walkerengine", out.toByteArray());
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 	

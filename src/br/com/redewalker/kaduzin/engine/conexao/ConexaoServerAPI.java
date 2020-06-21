@@ -22,7 +22,7 @@ public class ConexaoServerAPI {
 	
 	public ConexaoServerAPI(Config config) {
 		this.banco = config.getConexaoServerBanco();
-		if (config.getConexaoMySQL()) {
+		if (config.getConexaoServerMySQL()) {
 			tipo = ConexaoType.MYSQL;
 			this.usuario = config.getConexaoServerUsuario();
 			this.senha = config.getConexaoServerSenha();

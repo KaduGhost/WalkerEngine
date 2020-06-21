@@ -12,6 +12,8 @@ public class ConexaoManager {
 	private ConexaoStaffDAO staff;
 	private ConexaoPunicoesDAO punicoes;
 	private ConexaoReportDAO report;
+	private ConexaoServersDAO server;
+	private ConexaoVIPDAO vip;
 	
 	public ConexaoManager(Config config) {
 		this.api = new ConexaoAPI(config);
@@ -21,6 +23,16 @@ public class ConexaoManager {
 		this.staff = new ConexaoStaffDAO("engine_staff", "id");
 		this.punicoes = new ConexaoPunicoesDAO("engine_punicoes", "id");
 		this.report = new ConexaoReportDAO(WalkerEngine.get().getServerType().toString().toLowerCase()+"_reports", "id");
+		this.server = new ConexaoServersDAO("engine_servers", "server");
+		this.vip = new ConexaoVIPDAO("engine_vip", "id");
+	}
+	
+	public ConexaoVIPDAO getConexaoVIPDAO() {
+		return vip;
+	}
+	
+	public ConexaoServersDAO getConexaoServersDAO() {
+		return server;
 	}
 	
 	public ConexaoReportDAO getConexaoReportDAO() {

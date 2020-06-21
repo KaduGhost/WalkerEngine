@@ -6,6 +6,7 @@ public enum Servers {
 	
 	Rede(ServerType.Lobby),
 	Lobby(ServerType.Lobby),
+	Lobby2(ServerType.Lobby),
 	Factions(ServerType.Server),
 	Factions1(ServerType.Server);
 	

@@ -236,4 +236,32 @@ private String nome, pk;
 		}
 	}
 	
+	public boolean setLong(long chave, String coluna, long valor) {
+		String sql = "update "+nome+" set "+coluna+" = ? where "+pk+" = ?";
+		try {
+			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
+			st.setLong(1, valor);
+			st.setLong(2, chave);
+			st.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean setLong(String chave, String coluna, long valor) {
+		String sql = "update "+nome+" set "+coluna+" = ? where "+pk+" = ?";
+		try {
+			PreparedStatement st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement(sql);
+			st.setLong(1, valor);
+			st.setString(2, chave);
+			st.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 }

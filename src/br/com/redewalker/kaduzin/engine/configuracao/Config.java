@@ -1,10 +1,10 @@
 package br.com.redewalker.kaduzin.engine.configuracao;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.plugin.java.JavaPlugin;
-
 
 public class Config extends Configuration {
 
@@ -53,7 +53,6 @@ public class Config extends Configuration {
 		if (!get().contains("Punicoes.motivos.modnaopermitido")) get().set("Punicoes.motivos.modnaopermitido", 0);
 		if (!get().contains("Voar.mundos-permitidos")) get().set("Voar.mundos-permitidos", Arrays.asList("world", "world_the_end", "world_nether"));
 		if (!get().contains("Motd.Motds")) get().set("Motd.Motds", Arrays.asList("&2&lWalkers MC &7(1.8.x) - &e&lFactions &a&lApocalipse\n&eServidor em §b§lDESENVOLVIMENTO", "&2&lWalkers MC &7(1.8.x) - &e&lFactions &a&lApocalipse\n&dVarias novidades no ar. Chega ai mermão!"));
-		if (!get().contains("Manutencao.em-manutencao")) get().set("Manutencao.em-manutencao", false);
 		if (!get().contains("Manutencao.tempo-inicio-manutencao")) get().set("Manutencao.tempo-inicio-manutencao", 300);
 		if (!get().contains("Manutencao.tempo-inicio-stop")) get().set("Manutencao.tempo-inicio-stop", 150);
 		if (!get().contains("Manutencao.manutencao-motd")) get().set("Manutencao.manutencao-motd", "&c&lWalkers MC &7(1.8.x) - &c&lServidor em manutenção\n§cVoltamos em breve.");
@@ -63,7 +62,20 @@ public class Config extends Configuration {
 		if (!get().contains("Tempo-para-expulsar")) get().set("Tempo-para-expulsar", 60);
 		if (!get().contains("protection.antiip.regex-ip")) get().set("protection.antiip.regex-ip", "(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])");
 		if (!get().contains("protection.antiip.regex-url")) get().set("protection.antiip.regex-url", "((http:\\/\\/|https:\\/\\/)?(www.)?(([a-zA-Z0-9-]){2,}\\.){1,4}([a-zA-Z]){2,6}(\\/([a-zA-Z-_\\/\\.0-9#:?=&;,]*)?)?)");
+		if (!get().contains("VIPS.Grupos")){
+			get().set("VIPS.Grupos.vip1.cmds", Arrays.asList("cmdteste1", "10;cmd @jogador teste permissao"));
+			get().set("VIPS.Grupos.vip2.cmds", Arrays.asList("cmdteste1", "cmdteste2"));
+			get().set("VIPS.Grupos.vip3.cmds", Arrays.asList("cmdteste1", "cmdteste2"));
+		}
 		save();
+	}
+	
+	public ArrayList<String> getCmds(String vip) {
+		ArrayList<String> cmds = new ArrayList<>();
+		for (String ps : get().getStringList("VIPS.Grupos."+vip+".cmds")) {
+			cmds.add(ps);
+		}
+		return cmds;
 	}
 	
 	public String getAntiIPRegexIP() {
@@ -109,10 +121,6 @@ public class Config extends Configuration {
 	
 	public String getManutencaoStopMotd() {
 		return get().getString("Manutencao.stop-motd");
-	}
-	
-	public boolean isManutencao() {
-		return get().getBoolean("Manutencao.em-manutencao");
 	}
 	
 	public void setManutencao(boolean set) {

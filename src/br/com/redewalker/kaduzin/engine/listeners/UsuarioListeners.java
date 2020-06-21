@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -28,6 +29,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -38,9 +40,23 @@ import br.com.redewalker.kaduzin.engine.apis.MensagensAPI;
 import br.com.redewalker.kaduzin.engine.configuracao.Config;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
 
+@SuppressWarnings("deprecation")
 public class UsuarioListeners implements Listener {
 	
 	Config config = WalkerEngine.get().getConfigManager().getConfigPrincipal();
+	
+	@EventHandler
+	void antesEntrar(AsyncPlayerPreLoginEvent e) {
+		if (!WalkerEngine.get().getManutencaoManager().isAberto()) {
+			e.disallow(Result.KICK_OTHER, "§cServidor iniciando, aguarde alguns segundos.");
+			return;
+		}
+		Usuario j = WalkerEngine.get().getUsuarioManager().getUsuario(e.getName());
+		if (!WalkerEngine.get().getManutencaoManager().isLiberado() && (!(j instanceof Usuario) || !j.hasPermission("walker.manutencao.entrar"))) {
+			e.disallow(Result.KICK_OTHER, "§cServidor está em manutenção.");
+			return;
+		}
+	}
 	
 	@EventHandler
 	void usuarioEntrou(PlayerLoginEvent e) {
@@ -58,6 +74,13 @@ public class UsuarioListeners implements Listener {
 	void aoEntrar(PlayerJoinEvent e) {
 		e.setJoinMessage("");
 		Usuario j = WalkerEngine.get().getUsuarioManager().getUsuario(e.getPlayer().getName());
+		if (j == null) return;
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				j.setOnline(true);
+			}
+		}.runTaskLater(WalkerEngine.get(), 20);
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -65,6 +88,8 @@ public class UsuarioListeners implements Listener {
 		e.setQuitMessage("");
 		Player p = e.getPlayer();
 		Usuario j = WalkerEngine.get().getUsuarioManager().getUsuario(p.getName());
+		if (j == null) return;
+		//j.setOnline(false);
 	}
 	
 	private HashSet<Player> protegidos = new HashSet<>();

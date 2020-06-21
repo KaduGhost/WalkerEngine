@@ -33,6 +33,10 @@ public class ConexaoUsuarioDAO extends Conexao {
 				st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("ALTER TABLE `"+getNome()+"` ADD `online` tinyint default 0 AFTER `logado`");
 				st.executeUpdate();
 			}
+			if (!WalkerEngine.get().getConexaoManager().getConexaoAPI().hasColumn(rs, "onlineserver")) {
+				st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("ALTER TABLE `"+getNome()+"` ADD `onlineserver` varchar(50) not null default 'nenhum' AFTER `online`");
+				st.executeUpdate();
+			}
 			if (!WalkerEngine.get().getConexaoManager().getConexaoAPI().hasColumn(rs, "chatfocus")) {
 				st = WalkerEngine.get().getConexaoManager().getConexaoAPI().getConexao().prepareStatement("ALTER TABLE `"+getNome()+"` ADD `chatfocus` varchar(50) not null default 'default' AFTER `online`");
 				st.executeUpdate();
