@@ -94,22 +94,6 @@ public class PunicoesManager implements Listener {
 	}
 	
 	public boolean jogadorPodePunir(Usuario j, PunicoesType tipo, int tempo) {
-		/*switch (tipo) {
-		case BAN:
-			if (j.getGroup().getPriority() >= 6) return true;
-			break;
-		case IPBAN:
-			if (j.getGroup().getPriority() >= 7) return true;
-			break;
-		case KICK:
-			if (j.getGroup().getPriority() >= 6) return true;
-			break;
-		case MUTE:
-			if ((j.getGroup().getPriority() >= 6 && tempo == 0) || (j.getGroup().getPriority() >= 5 && tempo != 0)) return true;
-			break;
-		default:
-			break;
-		}*/
 		if (j.hasPermission("walker.punicao."+tipo.toString().toLowerCase())) return true;
 		else if (j.hasPermission("walker.punicao.temp"+tipo.toString().toLowerCase()) && tempo != 0) return true;
 		return false;

@@ -1,16 +1,25 @@
 package br.com.redewalker.kaduzin.engine.sistema.vip;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import br.com.redewalker.kaduzin.engine.WalkerEngine;
 import br.com.redewalker.kaduzin.engine.bungee.WalkerBungee;
+import br.com.redewalker.kaduzin.engine.listeners.VIPsListeners;
 import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoType;
 import br.com.redewalker.kaduzin.engine.sistema.server.Servers;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
+import br.com.redewalker.kaduzin.engine.sistema.vip.inventario.InventarioVIPEscolherServidor;
+import br.com.redewalker.kaduzin.engine.sistema.vip.inventario.InventarioVIPMenu;
+import br.com.redewalker.kaduzin.engine.sistema.vip.inventario.InventarioVIPsByUsuarioLista;
+import br.com.redewalker.kaduzin.engine.sistema.vip.inventario.InventarioVIPsHistorico;
+import br.com.redewalker.kaduzin.engine.sistema.vip.inventario.InventarioVIPsLista;
+import br.com.redewalker.kaduzin.engine.sistema.vip.inventario.InventarioVipsType;
 
 public class VIPManager {
 	
@@ -22,7 +31,7 @@ public class VIPManager {
 				checkAllVipsAtivos();
 			}
 		}.runTaskTimer(WalkerEngine.get(), 0, 20*60*15);
-		Bukkit.getServer().getPluginManager().registerEvents(new AoClicar(), WalkerEngine.get());
+		Bukkit.getServer().getPluginManager().registerEvents(new VIPsListeners(), WalkerEngine.get());
 	}
 	
 	public void setVip(Usuario p, GrupoType vip, int dias, String recebido, Servers server) {
@@ -43,6 +52,28 @@ public class VIPManager {
 				  if (Integer.parseInt(cc[0]) >= r.nextInt(100)) Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), cc[1].replace("@jogador", p.getNickOriginal()));
 			  }else Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("@jogador", p.getNickOriginal()));
 		  }
+	}
+	
+	public void abrirInventario(Player p, InventarioVipsType tipo, VIP vip, Servers server, int pagina, Usuario j2, String st) {
+		switch (tipo) {
+		case MENU:
+			new InventarioVIPMenu(p, tipo);
+			break;
+		case HISTORICOVIPS:
+			new InventarioVIPsHistorico(pagina, p, server, tipo);
+			break;
+		case ESCOLHERSERVIDOR:
+			new InventarioVIPEscolherServidor(pagina, p, st);
+			break;
+		case LISTAVIPSSERVER:
+			new InventarioVIPsLista(pagina, p, server, tipo);
+			break;
+		case LISTAVIPS:
+			new InventarioVIPsByUsuarioLista(pagina, p, server, j2, tipo);
+			break;
+		default:
+			break;
+		}
 	}
 	
 	public boolean containsVIPPermanente(Usuario user, GrupoType vip, Servers server) {
@@ -95,16 +126,24 @@ public class VIPManager {
 		return WalkerEngine.get().getConexaoManager().getConexaoVIPDAO().getVip(id);
 	}
 	
-	public ArrayList<VIP> getAllVipsPermanentes() {
-		return WalkerEngine.get().getConexaoManager().getConexaoVIPDAO().getAllVipsPerma();
-	}
-	
-	public ArrayList<VIP> getAllVipsTemporarios() {
-		return WalkerEngine.get().getConexaoManager().getConexaoVIPDAO().getAllVipsTempo();
-	}
-	
 	public ArrayList<VIP> getVIPsParaAtivar(Usuario user, Servers server) {
 		return WalkerEngine.get().getConexaoManager().getConexaoVIPDAO().getVipsParaAtivar(user.getNickOriginal(), server.toString());
+	}
+	
+	public ArrayList<VIP> getVIPsValidos(Servers server) {
+		return WalkerEngine.get().getConexaoManager().getConexaoVIPDAO().getVipsValidosByServer(server);
+	}
+	
+	public ArrayList<VIP> getVIPs(Servers server) {
+		return WalkerEngine.get().getConexaoManager().getConexaoVIPDAO().getVips(server);
+	}
+	
+	public HashMap<String, ArrayList<VIP>> getVIPsWithKey(Servers server) {
+		return WalkerEngine.get().getConexaoManager().getConexaoVIPDAO().getVipsWithKey(server);
+	}
+	
+	public ArrayList<VIP> getVIPsValidosByJogador(Usuario user, Servers server) {
+		return WalkerEngine.get().getConexaoManager().getConexaoVIPDAO().getVipsValidosByJogador(user, server);
 	}
 	
 	public ArrayList<VIP> getVIPs(Usuario user, Servers server) {

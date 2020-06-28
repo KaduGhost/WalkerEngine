@@ -31,11 +31,9 @@ import br.com.redewalker.kaduzin.engine.comandos.ComandoSpeed;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoStaff;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoSudo;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoTell;
-import br.com.redewalker.kaduzin.engine.comandos.ComandoTempoVip;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoTimeSet;
-import br.com.redewalker.kaduzin.engine.comandos.ComandoTirarVip;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoTitle;
-import br.com.redewalker.kaduzin.engine.comandos.ComandoTrocarVip;
+import br.com.redewalker.kaduzin.engine.comandos.ComandoVIPs;
 import br.com.redewalker.kaduzin.engine.comandos.ComandoVanish;
 import br.com.redewalker.kaduzin.engine.conexao.ConexaoManager;
 import br.com.redewalker.kaduzin.engine.configuracao.ConfigManager;
@@ -263,11 +261,9 @@ public class WalkerEngine extends JavaPlugin {
 		comandosManager.registrarComando(new ComandoSudo("sudo"), "walker.sudo", 0);
 		comandosManager.registrarComando(new ComandoTitle("title"), "walker.title", 0);
 		comandosManager.registrarComando(new ComandoManutencao("manutencao"), "walker.manutencao.admin", 0);
+		comandosManager.registrarComando(new ComandoVIPs("vips"), "walker.vips.admin", 0);
 		comandosManager.registrarComando(new ComandoDarVip("darvip"), "walker.darvip", 0);
 		comandosManager.registrarComando(new ComandoSetVip("setvip"), "walker.setvip", 0);
-		comandosManager.registrarComando(new ComandoTirarVip("tirarvip"), "walker.tirarvip", 0);
-		comandosManager.registrarComando(new ComandoTrocarVip("trocarvip"), "walker.trocarvip", 0);
-		comandosManager.registrarComando(new ComandoTempoVip("tempovip"), "walker.tempovip", 0);
 	}
 
 }

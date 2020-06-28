@@ -28,7 +28,6 @@ public class InventarioPunirMenu {
 		inv.setItem(39, WalkersItens.getItemPunicao("listameusbanidos", null, null));
 		inv.setItem(41, WalkersItens.getItemPunicao("listameusmutados", null, null));
 		p.openInventory(inv);
-		
 	}
 
 }

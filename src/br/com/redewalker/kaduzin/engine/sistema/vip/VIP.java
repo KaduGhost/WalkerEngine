@@ -5,7 +5,7 @@ import br.com.redewalker.kaduzin.engine.sistema.grupo.GrupoType;
 import br.com.redewalker.kaduzin.engine.sistema.server.Servers;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
 
-public class VIP {
+public class VIP implements Comparable<VIP> {
 	
 	private long id;
 	
@@ -78,6 +78,13 @@ public class VIP {
 	
 	public void setRemovidoPor(String valor) {
 		WalkerEngine.get().getConexaoManager().getConexaoVIPDAO().setString(id, "removido", valor);
+	}
+	
+	@Override
+	public int compareTo(VIP o) {
+		if (id < o.getID()) return -1;
+		else if (id > o.getID()) return 1;
+		else return 0;
 	}
 	
 }

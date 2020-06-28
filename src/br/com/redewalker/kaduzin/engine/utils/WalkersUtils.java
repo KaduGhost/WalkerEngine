@@ -40,6 +40,7 @@ import br.com.redewalker.kaduzin.engine.sistema.reports.ReportMotivoType;
 import br.com.redewalker.kaduzin.engine.sistema.reports.ReportPerfil;
 import br.com.redewalker.kaduzin.engine.sistema.usuario.Usuario;
 import br.com.redewalker.kaduzin.engine.sistema.vip.VIP;
+import br.com.redewalker.kaduzin.engine.sistema.vip.inventario.InventarioVipsType;
 
 public class WalkersUtils {
 	
@@ -257,13 +258,16 @@ public class WalkersUtils {
 			long tempo = vip.getTempoRestante();
 			long tempo1 = vip.getInicio();
 			ArrayList<String> lore = new ArrayList<>();
+			lore.add(EsconderStringUtils.esconderString(vip.getID()+""));
+			lore.add(" §7Jogador: §f"+vip.getUsuario().getNickOriginal());
 			lore.add(" §7Tipo do VIP: "+ WalkerEngine.get().getGruposManager().getGrupo(vip.getTipo()).getTag().toString());
+			lore.add(" §7Servidor: "+ vip.getServer().toString());
 			boolean ativo = vip.isAtivo();
 			if (vip.isExpirado()) lore.add(" §7Duração restante: §cExpirado");
 			else if (tempo == 0L) lore.add(" §7Duração restante: §aPermanente");
 			else if (ativo) {
 				tempo = (tempo - System.currentTimeMillis())/1000L;
-				lore.add(" §7Duração restante: §e"+WalkersUtils.getTempoRestante(vip.getInicio(), tempo));
+				lore.add(" §7Duração restante: §e"+WalkersUtils.getTempoRestante(tempo));
 			}else if (!ativo) lore.add(" §7Duração restante: §e"+WalkersUtils.getTempoRestante(tempo));
 			if (ativo) lore.add(" §7Ativo: §fSim");
 			else lore.add(" §7Ativo: §fNão");
@@ -274,25 +278,29 @@ public class WalkersUtils {
 			return lore;
 		}
 		
-		public static ItemStack getItemVIP(String tipo, VIP vip) {
+		public static ItemStack getItemVIP(String tipo, VIP vip, String st1, InventarioVipsType inventario, Usuario user) {
 			switch (tipo) {
 			case "semvip":
 				return new ItemBuilder(Material.NAME_TAG).setName("§eSem VIPs").setLore(Arrays.asList(" §7Este jogador não tem"," §7VIP ativo, na fila ou permanente")).fazer();
 			case "vip":
 				ArrayList<String> lore = getLoreVIP(vip);
-				return new ItemBuilder(Material.NAME_TAG).setName(" §7ID: §f"+vip.getID()).setLore(lore).fazer();
-			case "vipr":
-				lore = getLoreVIP(vip);
-				lore.add(" §fDireito: §7para remover o VIP.");
-				return new ItemBuilder(Material.NAME_TAG).setName(" §7ID: §f"+vip.getID()).setLore(lore).fazer();
-			case "vipm":
-				lore = getLoreVIP(vip);
-				if (!vip.isAtivo()) lore.add(" §fDireito: §7para usar o VIP.");
-				return new ItemBuilder(Material.NAME_TAG).setName(" §7ID: §f"+vip.getID()).setLore(lore).fazer();
-			case "verstaffserver":
-				return new ItemBuilder(Material.EMERALD).setName("§eVer equipe do servidor").setLore(Arrays.asList(" §7Neste menu você pode ver", " §7e editar a staff do servidor.")).fazer();
-			case "verstaffrede":
-				return new ItemBuilder(Material.NETHER_STAR).setName("§eVer equipe da rede").setLore(Arrays.asList(" §7Neste menu você pode ver", " §7e editar a staff da rede.")).fazer();
+				if (!inventario.equals(InventarioVipsType.HISTORICOVIPS)) {
+					if (!vip.isAtivo()) lore.add(" §fEsquerdo: §7para ativar o VIP.");
+					else lore.add(" §fEsquerdo: §7para desativar o VIP.");
+					if (user instanceof Usuario && user.hasPermission("walker.vips.admin"))lore.add(" §fDireito: §7para remover o VIP.");
+				}
+				if (!InventarioVipsType.HISTORICOVIPS.equals(inventario)) return new ItemBuilder(Material.NAME_TAG).setName(" §c§e"+vip.getUsuario().getNickOriginal()).setLore(lore).fazer();
+				else return new ItemBuilder(Material.NAME_TAG).setName(" §7ID: §f"+vip.getID()).setLore(lore).fazer();
+			case "listavips":
+				return new ItemBuilder(Material.PAPER).setName("§eLista de VIPs no servidor").setLore(Arrays.asList(" §7Clique para ver a lista de", " §7vips ativos no servidor atual.")).fazer();
+			case "listavipsall":
+				return new ItemBuilder(Material.PAPER).setName("§eLista de VIPs em toda a rede").setLore(Arrays.asList(" §7Clique para ver a lista de", " §7vips ativos na rede walker.")).fazer();
+			case "historicovips":
+				return new ItemBuilder(Material.BOOK_AND_QUILL).setName("§eHistorico de VIPs no servidor").setLore(Arrays.asList(" §7Clique para ver o historico", " §7vips no servidor atual.")).fazer();
+			case "historicovipsall":
+				return new ItemBuilder(Material.BOOK_AND_QUILL).setName("§eHistorico de VIPs em toda a rede").setLore(Arrays.asList(" §7Clique para ver o historico", " §7vips na rede walker.")).fazer();
+			case "servidor":
+				return new ItemBuilder(Material.PAPER).setName("§e"+st1).setLore(Arrays.asList(" §7Clique para ver os vips", " §7deste servidor.")).fazer();
 			default:
 				return null;
 			}
@@ -602,7 +610,6 @@ public class WalkersUtils {
 			}
 		}
 
-		
 	}
 	
 	public static class WalkersTeleporte {
